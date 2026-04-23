@@ -132,7 +132,7 @@ def add_student(name: str, email: str = None, login_id: str = None) -> int:
     Args:
         name: Student's full name.
         email: Optional email address.
-        login_id: Unique login ID for student authentication (e.g., 'STU001').
+        login_id: Unique login ID for student authentication (e.g., 'AI251030').
 
     Returns:
         The new student's ID.
@@ -149,6 +149,43 @@ def add_student(name: str, email: str = None, login_id: str = None) -> int:
     conn.commit()
     conn.close()
     return student_id
+
+
+def add_students_bulk(students_data: list[dict]) -> list[dict]:
+    """
+    Add multiple students in a single transaction.
+
+    Args:
+        students_data: List of dicts with keys: name (required), email (optional), login_id (optional).
+
+    Returns:
+        List of dicts: [{name, id, status, error}, ...] for each student.
+    """
+    conn = _get_connection()
+    cursor = conn.cursor()
+    results = []
+
+    for s in students_data:
+        name = s.get("name", "").strip()
+        if not name:
+            results.append({"name": "(empty)", "id": None, "status": "skipped", "error": "Empty name"})
+            continue
+
+        email = s.get("email", "").strip() or None
+        login_id = s.get("login_id", "").strip() or None
+
+        try:
+            cursor.execute(
+                "INSERT INTO students (name, email, login_id) VALUES (?, ?, ?)",
+                (name, email, login_id)
+            )
+            results.append({"name": name, "id": cursor.lastrowid, "status": "added", "error": None})
+        except sqlite3.IntegrityError as e:
+            results.append({"name": name, "id": None, "status": "error", "error": str(e)})
+
+    conn.commit()
+    conn.close()
+    return results
 
 
 def get_student_by_login_id(login_id: str) -> dict:
@@ -244,6 +281,51 @@ def record_attendance(student_id: int, date_str: str = None, present: bool = Tru
 
     conn.commit()
     conn.close()
+
+
+def record_attendance_bulk(records: list[dict]):
+    """
+    Record attendance for multiple students in a single transaction.
+
+    Args:
+        records: List of dicts with keys: student_id, date (YYYY-MM-DD), present (bool).
+    """
+    conn = _get_connection()
+    cursor = conn.cursor()
+
+    for r in records:
+        cursor.execute("""
+            INSERT INTO attendance (student_id, date, present)
+            VALUES (?, ?, ?)
+            ON CONFLICT(student_id, date) DO UPDATE SET present = ?
+        """, (r["student_id"], r["date"], r["present"], r["present"]))
+
+    conn.commit()
+    conn.close()
+
+
+def get_attendance_for_date(date_str: str) -> dict:
+    """
+    Get attendance records for ALL students on a specific date.
+
+    Args:
+        date_str: Date in YYYY-MM-DD format.
+
+    Returns:
+        Dict mapping student_id → present (bool). Students with no record
+        for that date are not included.
+    """
+    conn = _get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT student_id, present FROM attendance WHERE date = ?
+    """, (date_str,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return {row["student_id"]: bool(row["present"]) for row in rows}
 
 
 def get_attendance_rate(student_id: int) -> float:

@@ -52,40 +52,41 @@ with st.sidebar:
     st.markdown(
         """
         <div style='
-            text-align: center;
-            padding: 1.4rem 0.5rem 1.2rem 0.5rem;
-            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.3rem 0 0.8rem 0;
         '>
             <div style='
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 56px; height: 56px;
+                width: 38px; height: 38px;
                 background: linear-gradient(135deg, #7C6FFF, #A78BFA);
-                border-radius: 16px;
-                font-size: 1.8rem;
-                box-shadow: 0 8px 24px rgba(124,111,255,0.4);
-                margin-bottom: 0.8rem;
+                border-radius: 10px;
+                font-size: 1.2rem;
+                box-shadow: 0 4px 14px rgba(124,111,255,0.35);
+                flex-shrink: 0;
             '>🎓</div>
-            <br>
-            <span style='
-                font-size: 1.15rem;
-                font-weight: 800;
-                letter-spacing: -0.3px;
-                background: linear-gradient(135deg, #7C6FFF, #C4B5FD);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-            '>MTRX-TriAxis</span>
-            <br>
-            <span style='font-size: 0.72rem; color: #6B7280; letter-spacing: 0.5px; text-transform: uppercase;'>
-                AI Classroom Assistant
-            </span>
+            <div>
+                <div style='
+                    font-size: 1rem;
+                    font-weight: 800;
+                    letter-spacing: -0.3px;
+                    background: linear-gradient(135deg, #7C6FFF, #C4B5FD);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    line-height: 1.2;
+                '>MTRX-TriAxis</div>
+                <div style='font-size: 0.62rem; color: #6B7280; letter-spacing: 0.4px;
+                            text-transform: uppercase; line-height: 1;'>AI Classroom</div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='border-top:1px solid #252840; margin: 0 0 0.8rem 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='border-top:1px solid #252840; margin: 0 0 0.6rem 0;'></div>", unsafe_allow_html=True)
 
     # ── Role Badge ───────────────────────────────
     from backend.auth import is_student_logged_in, get_logged_in_student
@@ -201,11 +202,12 @@ with st.sidebar:
         )
         st.caption("Upload a PDF to get started")
 
-    # ── Footer ───────────────────────────────────
+    # ── Footer ───────────────────────────────────────────
+    st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
     st.markdown(
         """
-        <div style='position:absolute; bottom:1.2rem; left:0; right:0;
-                    text-align:center; color:#3D4150; font-size:0.7rem;'>
+        <div style='text-align:center; color:#3D4150; font-size:0.7rem;
+                    padding: 0.8rem 0; border-top: 1px solid #252840;'>
             MTRX-TriAxis v2.0 · Built with ❤️
         </div>
         """,

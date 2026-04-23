@@ -10,6 +10,7 @@ from backend.student_model import (
     get_class_topic_averages,
     get_class_weak_topics,
     get_class_attendance_rate,
+    get_weak_topics,
 )
 from backend.llm_utils import get_llm
 from backend.weather_context import get_weather, get_context_suggestion
@@ -105,6 +106,62 @@ def get_strong_topics_across_class(threshold: float = 70.0) -> list[str]:
         if data["average"] >= threshold
     ]
     return strong
+
+
+def get_student_risk_data() -> list[dict]:
+    """
+    Calculate a composite risk score for every student.
+
+    Risk factors (each normalised to 0–100, higher = worse):
+        - Score risk: 100 − overall_score%
+        - Attendance risk: 100 − attendance%
+        - Weak-topic risk: (number of weak topics / 5) * 100, capped at 100
+
+    Composite risk = weighted average: 40% score + 35% attendance + 25% weak-topics.
+
+    Returns:
+        Sorted list of dicts (highest risk first):
+        [{name, overall_score, attendance, weak_count, risk_score, risk_level}, ...]
+    """
+    students = list_students()
+    if not students:
+        return []
+
+    results = []
+    for s in students:
+        sid = s["id"]
+        score = get_overall_score(sid)
+        attendance = get_attendance_rate(sid)
+        weak = get_weak_topics(sid)
+        weak_count = len(weak)
+
+        score_risk = 100 - score
+        att_risk = 100 - attendance
+        weak_risk = min((weak_count / 5) * 100, 100)
+
+        risk_score = round(0.40 * score_risk + 0.35 * att_risk + 0.25 * weak_risk, 1)
+
+        if risk_score >= 70:
+            risk_level = "critical"
+        elif risk_score >= 50:
+            risk_level = "high"
+        elif risk_score >= 30:
+            risk_level = "medium"
+        else:
+            risk_level = "low"
+
+        results.append({
+            "id": sid,
+            "name": s["name"],
+            "overall_score": score,
+            "attendance": attendance,
+            "weak_count": weak_count,
+            "risk_score": risk_score,
+            "risk_level": risk_level,
+        })
+
+    results.sort(key=lambda x: x["risk_score"], reverse=True)
+    return results
 
 
 def generate_teaching_suggestions(city: str = None) -> str:

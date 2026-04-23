@@ -69,12 +69,12 @@ with col_c:
     with st.form("student_login_form"):
         login_name = st.text_input(
             "Your Name",
-            placeholder="e.g., Ayush Sharma",
+            placeholder="e.g., Ayush Mhatre",
             help="Enter your full name as registered by your teacher.",
         )
         login_id = st.text_input(
             "Student ID",
-            placeholder="e.g., STU001",
+            placeholder="e.g., AI251030",
             help="Enter the unique ID given to you by your teacher.",
         )
         st.markdown("<br>", unsafe_allow_html=True)

@@ -17,6 +17,7 @@ from backend.teacher_insights import (
     get_weak_topics_across_class,
     get_strong_topics_across_class,
     generate_teaching_suggestions,
+    get_student_risk_data,
 )
 from backend.teacher_feedback import (
     add_feedback, get_recent_feedback, set_preference,
@@ -28,7 +29,7 @@ from backend.attendance_intelligence import get_frequently_absent_students
 from backend.class_weakness import get_top_weak_topics, generate_doubt_sheet
 from backend.weather_context import get_weather_summary, get_weather, is_bad_weather
 from backend.student_model import (
-    list_students, add_student, delete_student,
+    list_students, add_student, add_students_bulk, delete_student,
     update_student_login_id, get_student,
 )
 from backend.content_sharing import (
@@ -187,6 +188,80 @@ m3.metric("📅 Avg Attendance", f"{performance['avg_attendance']}%")
 weak_count = len(get_weak_topics_across_class())
 m4.metric("⚠️ Weak Topics", weak_count)
 
+# =================================================================
+# STUDENT RISK HEATMAP
+# =================================================================
+st.markdown("---")
+st.markdown("### 🔥 Student Risk Heatmap")
+
+risk_data = get_student_risk_data()
+
+if risk_data:
+    # Build heatmap data
+    names = [r["name"] for r in risk_data]
+    metrics = ["Score Risk", "Attendance Risk", "Weak Topics", "Overall Risk"]
+    z_data = []
+    for r in risk_data:
+        score_risk = round(100 - r["overall_score"], 1)
+        att_risk = round(100 - r["attendance"], 1)
+        weak_risk = round(min((r["weak_count"] / 5) * 100, 100), 1)
+        z_data.append([score_risk, att_risk, weak_risk, r["risk_score"]])
+
+    fig_heatmap = go.Figure(data=go.Heatmap(
+        z=z_data,
+        x=metrics,
+        y=names,
+        colorscale=[
+            [0, "#1a472a"],
+            [0.3, "#2d6a4f"],
+            [0.5, "#f9a825"],
+            [0.7, "#e65100"],
+            [1.0, "#b71c1c"],
+        ],
+        text=[[f"{v}%" for v in row] for row in z_data],
+        texttemplate="%{text}",
+        textfont={"size": 12},
+        hovertemplate="Student: %{y}<br>Metric: %{x}<br>Risk: %{z}%<extra></extra>",
+        zmin=0,
+        zmax=100,
+    ))
+    fig_heatmap.update_layout(
+        template="plotly_dark",
+        paper_bgcolor="#0E1117",
+        plot_bgcolor="#1a1d29",
+        height=max(250, len(names) * 45 + 100),
+        margin=dict(l=10, r=10, t=10, b=10),
+        xaxis=dict(side="top"),
+    )
+    st.plotly_chart(fig_heatmap, use_container_width=True)
+
+    # Risk badges
+    st.markdown("**Student Risk Levels:**")
+    badge_cols = st.columns(min(len(risk_data), 4))
+    for i, r in enumerate(risk_data):
+        level_config = {
+            "critical": ("🔴", "#F44336"),
+            "high":     ("🟠", "#FF9800"),
+            "medium":   ("🟡", "#FFC107"),
+            "low":      ("🟢", "#4CAF50"),
+        }
+        emoji, color = level_config.get(r["risk_level"], ("⚪", "#888"))
+        col = badge_cols[i % len(badge_cols)]
+        col.markdown(
+            f"""
+            <div style='background: #1a1d29; padding: 0.5rem 0.8rem; border-radius: 8px;
+                        margin-bottom: 0.4rem; border-left: 4px solid {color};'>
+                {emoji} <strong>{r['name']}</strong><br>
+                <span style='color: {color}; font-size: 0.85rem;'>
+                    {r['risk_level'].title()} ({r['risk_score']}%)
+                </span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+else:
+    st.info("Add students and record quizzes/attendance to see risk analysis.")
+
 st.markdown("---")
 
 # ----- Feature 2: Frequently Absent Students -----
@@ -333,9 +408,61 @@ if top_weak:
         with st.spinner(f"Generating doubt sheet for: {', '.join(weak_topic_names)}..."):
             sheet = generate_doubt_sheet(weak_topic_names)
             st.session_state["doubt_sheet"] = sheet
+            st.session_state["doubt_sheet_shared"] = False
 
     if "doubt_sheet" in st.session_state:
         st.markdown(st.session_state["doubt_sheet"])
+
+        # Share doubt sheet with students
+        if not st.session_state.get("doubt_sheet_shared", False):
+            st.markdown("---")
+            ds_col1, ds_col2 = st.columns([2, 1])
+            with ds_col1:
+                ds_student_names = ["All Students"] + [f"{s['name']} (ID: {s['id']})" for s in all_students] if all_students else ["All Students"]
+                ds_targets = st.multiselect(
+                    "Share doubt sheet with:",
+                    options=ds_student_names,
+                    default=["All Students"],
+                    key="ds_share_targets",
+                )
+            with ds_col2:
+                st.markdown("<br>", unsafe_allow_html=True)
+                if st.button("📤 Share Doubt Sheet", type="primary", use_container_width=True, key="ds_share_btn"):
+                    if "All Students" in ds_targets:
+                        ds_ids = [s["id"] for s in all_students] if all_students else []
+                    else:
+                        ds_ids = []
+                        for label in ds_targets:
+                            try:
+                                sid = int(label.split("ID: ")[1].rstrip(")"))
+                                ds_ids.append(sid)
+                            except (IndexError, ValueError):
+                                pass
+
+                    if ds_ids:
+                        ds_share_id = create_share_link(
+                            content_type="doubt_sheet",
+                            content_data={"content": st.session_state["doubt_sheet"]},
+                        )
+                        for sid in ds_ids:
+                            assign_content_to_student(ds_share_id, sid)
+
+                        st.session_state["doubt_sheet_shared"] = True
+                        st.success(f"✅ Doubt sheet shared with {len(ds_ids)} student(s)! They can view it in their Portal → Assignments.")
+                        st.balloons()
+                    else:
+                        st.warning("No students selected.")
+        else:
+            st.markdown(
+                """
+                <div style='background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.3);
+                            border-radius: 10px; padding: 0.8rem 1rem; text-align: center; margin-top: 0.5rem;'>
+                    ✅ <strong style='color: #22C55E;'>Doubt sheet shared with students!</strong>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
 else:
     st.info("No weak topics detected. Students are performing well across all topics!")
 
@@ -386,28 +513,76 @@ st.markdown("### 👥 Student Management")
 mgmt_col1, mgmt_col2 = st.columns([1, 2])
 
 with mgmt_col1:
-    st.markdown("#### ➕ Add Student")
-    with st.form("teacher_add_student_form", clear_on_submit=True):
-        new_name = st.text_input("Name", placeholder="e.g., Ayush Sharma")
-        new_email = st.text_input("Email (optional)", placeholder="ayush@example.com")
-        new_login_id = st.text_input(
-            "Login ID",
-            placeholder="e.g., STU001",
-            help="Unique ID for student login. Must be unique.",
-        )
-        add_submitted = st.form_submit_button("Add Student", type="primary")
+    st.markdown("#### ➕ Add Students")
+    add_single_tab, add_bulk_tab = st.tabs(["Single", "📋 Bulk Add"])
 
-        if add_submitted and new_name.strip():
-            try:
-                sid = add_student(
-                    new_name.strip(),
-                    new_email.strip() or None,
-                    new_login_id.strip() or None,
-                )
-                st.success(f"✅ Added {new_name} (ID: {sid}, Login: {new_login_id or 'Not set'})")
-                st.rerun()
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
+    with add_single_tab:
+        with st.form("teacher_add_student_form", clear_on_submit=True):
+            new_name = st.text_input("Name", placeholder="e.g., Ayush Mhatre")
+            new_email = st.text_input("Email (optional)", placeholder="ayush.mhatre25@sakec.ac.in")
+            new_login_id = st.text_input(
+                "Login ID",
+                placeholder="e.g., AI251030",
+                help="Unique ID for student login. Must be unique.",
+            )
+            add_submitted = st.form_submit_button("Add Student", type="primary")
+
+            if add_submitted and new_name.strip():
+                try:
+                    sid = add_student(
+                        new_name.strip(),
+                        new_email.strip() or None,
+                        new_login_id.strip() or None,
+                    )
+                    st.success(f"✅ Added {new_name} (ID: {sid}, Login: {new_login_id or 'Not set'})")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+
+    with add_bulk_tab:
+        st.markdown(
+            """
+            <div style='background: rgba(124,111,255,0.08); border: 1px solid rgba(124,111,255,0.25);
+                        border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 0.8rem; font-size: 0.82rem;'>
+                <strong style='color: #A78BFA;'>Format:</strong> One per line —
+                <code>Name, Email, LoginID</code><br>
+                <span style='color: #888;'>Email & LoginID are optional.</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        bulk_text = st.text_area(
+            "Paste students:",
+            height=140,
+            placeholder="Ayush Mhatre, ayush.mhatre25@sakec.ac.in, AI251030\nRiya Patel\nKaran Singh, , STU003",
+            key="td_bulk_input",
+        )
+
+        if st.button("📋 Add All", type="primary", use_container_width=True, key="td_bulk_btn"):
+            if not bulk_text.strip():
+                st.warning("Please enter at least one student.")
+            else:
+                lines = [l.strip() for l in bulk_text.strip().split("\n") if l.strip()]
+                parsed = []
+                for line in lines:
+                    parts = [p.strip() for p in line.split(",")]
+                    name = parts[0] if len(parts) > 0 else ""
+                    email = parts[1] if len(parts) > 1 else ""
+                    login_id = parts[2] if len(parts) > 2 else ""
+                    parsed.append({"name": name, "email": email, "login_id": login_id})
+
+                results = add_students_bulk(parsed)
+                added = [r for r in results if r["status"] == "added"]
+                errors = [r for r in results if r["status"] == "error"]
+
+                if added:
+                    st.success(f"✅ Added {len(added)} student(s)!")
+                if errors:
+                    for e in errors:
+                        st.error(f"❌ {e['name']}: {e['error']}")
+                if added:
+                    st.rerun()
 
 with mgmt_col2:
     st.markdown("#### 📋 All Students")
@@ -426,7 +601,7 @@ with mgmt_col2:
                     new_lid = st.text_input(
                         "Set Login ID",
                         key=f"lid_{s['id']}",
-                        placeholder="STU001",
+                        placeholder="AI251030",
                         label_visibility="collapsed",
                     )
                     if new_lid and st.button("Set", key=f"set_lid_{s['id']}"):

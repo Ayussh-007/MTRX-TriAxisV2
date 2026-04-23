@@ -13,7 +13,7 @@ def authenticate_student(name: str, login_id: str) -> dict:
 
     Args:
         name: Student's name (case-insensitive match).
-        login_id: Unique login ID (e.g., 'STU001').
+        login_id: Unique login ID (e.g., 'AI251030').
 
     Returns:
         Student dict if authenticated, None otherwise.
