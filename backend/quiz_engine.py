@@ -52,7 +52,7 @@ def generate_quiz(topic: str, num_questions: int = 5) -> dict:
     prompt = get_quiz_prompt()
     chain = prompt | llm
 
-    print(f"🧠 Generating {num_questions} questions on: {topic}...")
+    print(f"[INFO] Generating {num_questions} questions on: {topic}...")
     response = chain.invoke({
         "topic": topic,
         "context": context,
@@ -151,7 +151,7 @@ def _parse_quiz_response(response: str) -> list[dict]:
         except json.JSONDecodeError:
             pass
 
-    print("⚠️  Could not parse quiz response as JSON")
+    print("[WARN] Could not parse quiz response as JSON")
     return []
 
 

@@ -120,7 +120,7 @@ def init_database():
 
     conn.commit()
     conn.close()
-    print("✅ Database initialized")
+    print("[OK] Database initialized")
 
 
 # ----- Student CRUD -----

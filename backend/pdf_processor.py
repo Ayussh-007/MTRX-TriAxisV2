@@ -167,34 +167,34 @@ def process_pdf(file_path: str, use_llm_chunker: bool = True) -> list[dict]:
     Returns:
         List of chunk dicts ready for embedding.
     """
-    print(f"📄 Extracting text from: {file_path}")
+    print(f"[INFO] Extracting text from: {file_path}")
     raw_text = extract_text_from_pdf(file_path)
 
     if not raw_text:
-        print("⚠️  No text found in PDF!")
+        print("[WARN] No text found in PDF!")
         return []
 
-    print(f"📝 Extracted {len(raw_text)} characters from PDF")
+    print(f"[INFO] Extracted {len(raw_text)} characters from PDF")
 
     # Step 2: Clean and structure with LLM
-    print("🧹 Cleaning and structuring text with LLM...")
+    print("[INFO] Cleaning and structuring text with LLM...")
     structured_text = clean_text_with_llm(raw_text)
-    print(f"✅ Structured text: {len(structured_text)} characters")
+    print(f"[OK] Structured text: {len(structured_text)} characters")
 
     # Step 3: Chunk into study units
     if use_llm_chunker:
-        print("✂️  Chunking with LLM (smart mode)...")
+        print("[INFO] Chunking with LLM (smart mode)...")
         chunks = chunk_content_with_llm(structured_text)
 
         # Fallback if LLM chunking produced nothing
         if not chunks:
-            print("⚠️  LLM chunking failed, using fallback splitter...")
+            print("[WARN] LLM chunking failed, using fallback splitter...")
             chunks = chunk_content_fallback(structured_text)
     else:
-        print("✂️  Chunking with text splitter (fast mode)...")
+        print("[INFO] Chunking with text splitter (fast mode)...")
         chunks = chunk_content_fallback(structured_text)
 
-    print(f"✅ Created {len(chunks)} chunks")
+    print(f"[OK] Created {len(chunks)} chunks")
     return chunks
 
 
@@ -245,7 +245,7 @@ def _parse_json_response(response: str) -> list[dict]:
             pass
 
     # If all parsing fails, return empty list
-    print("⚠️  Could not parse LLM response as JSON")
+    print("[WARN] Could not parse LLM response as JSON")
     return []
 
 

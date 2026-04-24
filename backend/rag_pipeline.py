@@ -43,7 +43,7 @@ def create_vectorstore(chunks: list[dict], save_path: str = None) -> FAISS:
         )
         documents.append(doc)
 
-    print(f"📊 Creating embeddings for {len(documents)} documents...")
+    print(f"[INFO] Creating embeddings for {len(documents)} documents...")
 
     # Create embeddings and build FAISS index
     embeddings = get_embeddings()
@@ -52,7 +52,7 @@ def create_vectorstore(chunks: list[dict], save_path: str = None) -> FAISS:
     # Save to disk for persistence
     os.makedirs(save_path, exist_ok=True)
     vectorstore.save_local(save_path)
-    print(f"💾 Vector store saved to: {save_path}")
+    print(f"[INFO] Vector store saved to: {save_path}")
 
     return vectorstore
 
@@ -84,7 +84,7 @@ def load_vectorstore(load_path: str = None) -> FAISS:
         embeddings,
         allow_dangerous_deserialization=True  # Required for FAISS
     )
-    print(f"✅ Loaded vector store from: {load_path}")
+    print(f"[OK] Loaded vector store from: {load_path}")
     return vectorstore
 
 
@@ -134,7 +134,7 @@ def add_to_vectorstore(chunks: list[dict], load_path: str = None) -> FAISS:
     # Save updated index
     os.makedirs(load_path, exist_ok=True)
     vectorstore.save_local(load_path)
-    print(f"✅ Added {len(documents)} documents. Total in store updated.")
+    print(f"[OK] Added {len(documents)} documents. Total in store updated.")
     return vectorstore
 
 

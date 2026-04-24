@@ -37,7 +37,7 @@ def get_weather(city: str = None) -> dict:
     city = city or DEFAULT_CITY
 
     if not OPENWEATHER_API_KEY or OPENWEATHER_API_KEY == "your_api_key_here":
-        print("⚠️  OpenWeatherMap API key not configured")
+        print("[WARN] OpenWeatherMap API key not configured")
         return None
 
     params = {
@@ -62,13 +62,13 @@ def get_weather(city: str = None) -> dict:
         }
 
     except requests.exceptions.HTTPError as e:
-        print(f"⚠️  Weather API HTTP error: {e}")
+        print(f"[WARN] Weather API HTTP error: {e}")
         return None
     except requests.exceptions.ConnectionError:
-        print("⚠️  Could not connect to weather API")
+        print("[WARN] Could not connect to weather API")
         return None
     except Exception as e:
-        print(f"⚠️  Weather API error: {e}")
+        print(f"[WARN] Weather API error: {e}")
         return None
 
 
