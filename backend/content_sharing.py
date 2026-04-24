@@ -10,7 +10,9 @@ import uuid
 import sqlite3
 from datetime import datetime
 
-DATABASE_PATH = os.getenv("DATABASE_PATH", "data/classroom.db")
+from backend.paths import DB_PATH as _DEFAULT_DB_PATH
+
+DATABASE_PATH = os.getenv("DATABASE_PATH", _DEFAULT_DB_PATH)
 
 
 def _get_connection() -> sqlite3.Connection:

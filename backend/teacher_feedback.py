@@ -9,8 +9,10 @@ import json
 import sqlite3
 from backend.llm_utils import get_llm
 
+from backend.paths import DB_PATH as _DEFAULT_DB_PATH
+
 # Reuse the same DB path as student_model
-DATABASE_PATH = os.getenv("DATABASE_PATH", "data/classroom.db")
+DATABASE_PATH = os.getenv("DATABASE_PATH", _DEFAULT_DB_PATH)
 
 # ----- Predefined teaching styles -----
 TEACHING_STYLES = {

@@ -9,10 +9,11 @@ import sqlite3
 from datetime import datetime, date
 
 from backend.llm_utils import get_llm
+from backend.paths import DB_PATH as _DEFAULT_DB_PATH
 from prompts.learning_path import get_prompt as get_learning_path_prompt
 
-# Default database path
-DATABASE_PATH = os.getenv("DATABASE_PATH", "data/classroom.db")
+# Default database path (cross-platform via paths.py)
+DATABASE_PATH = os.getenv("DATABASE_PATH", _DEFAULT_DB_PATH)
 
 
 def _get_connection() -> sqlite3.Connection:
