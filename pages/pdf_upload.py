@@ -6,6 +6,7 @@ Upload and process curriculum PDFs through the AI pipeline.
 import streamlit as st
 import os
 
+from backend.paths import UPLOADS_DIR
 from backend.pdf_processor import save_pdf, process_pdf
 from backend.rag_pipeline import create_vectorstore, add_to_vectorstore, vectorstore_exists
 from backend.ui_components import page_header, section_header, info_card
@@ -127,7 +128,7 @@ if "last_chunks" in st.session_state and st.session_state["last_chunks"]:
 st.markdown("<hr>", unsafe_allow_html=True)
 section_header("📁 Uploaded Files", accent="#A78BFA")
 
-upload_dir = "data/uploads"
+upload_dir = UPLOADS_DIR
 if os.path.exists(upload_dir):
     files = [f for f in os.listdir(upload_dir) if f.endswith(".pdf")]
     if files:

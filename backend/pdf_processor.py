@@ -8,6 +8,7 @@ import json
 import fitz  # PyMuPDF
 
 from backend.llm_utils import get_llm
+from backend.paths import UPLOADS_DIR
 from prompts.curriculum_analyzer import get_prompt as get_analyzer_prompt
 from prompts.content_chunker import get_prompt as get_chunker_prompt
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -249,7 +250,7 @@ def _parse_json_response(response: str) -> list[dict]:
     return []
 
 
-def save_pdf(uploaded_file, upload_dir: str = "data/uploads") -> str:
+def save_pdf(uploaded_file, upload_dir: str = None) -> str:
     """
     Save an uploaded file (from Streamlit) to the uploads directory.
 
@@ -260,6 +261,7 @@ def save_pdf(uploaded_file, upload_dir: str = "data/uploads") -> str:
     Returns:
         Full path to the saved file.
     """
+    upload_dir = upload_dir or UPLOADS_DIR
     os.makedirs(upload_dir, exist_ok=True)
     file_path = os.path.join(upload_dir, uploaded_file.name)
 

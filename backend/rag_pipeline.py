@@ -8,11 +8,13 @@ import os
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 
+from backend.paths import VECTORSTORE_DIR as _DEFAULT_VS_DIR
+
 from backend.llm_utils import get_llm, get_embeddings
 from prompts.doubt_solver import get_prompt as get_doubt_prompt
 
-# Default path for persisting the FAISS index
-VECTORSTORE_DIR = os.path.join("data", "vectorstore")
+# Default path for persisting the FAISS index (cross-platform via paths.py)
+VECTORSTORE_DIR = _DEFAULT_VS_DIR
 
 
 def create_vectorstore(chunks: list[dict], save_path: str = None) -> FAISS:

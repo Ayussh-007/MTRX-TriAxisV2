@@ -37,8 +37,19 @@ You must also have [Ollama](https://ollama.com/) installed and running locally.
 
 ### 2. Setup Ollama
 Install Ollama, start the server, and pull the required models:
+
+**Mac / Linux:**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
+ollama pull mistral
+ollama pull nomic-embed-text
+ollama serve
+```
+
+**Windows:**
+```powershell
+# Download and run the installer from https://ollama.com/download/windows
+# Then open a terminal (cmd or PowerShell) and run:
 ollama pull mistral
 ollama pull nomic-embed-text
 ollama serve
@@ -61,7 +72,14 @@ Open the `.env` file and add your OpenWeatherMap API key:
 
 ### 4. Run the Application
 Start the Streamlit server:
+
+**Mac / Linux:**
 ```bash
+python3 -m streamlit run app.py
+```
+
+**Windows (cmd / PowerShell):**
+```powershell
 python -m streamlit run app.py
 ```
 *The app will automatically launch in your browser at `http://localhost:8501`*
