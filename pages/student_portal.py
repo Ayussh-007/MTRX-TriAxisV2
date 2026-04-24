@@ -86,7 +86,7 @@ with tab_progress:
 
             st.markdown(
                 f"""
-                <div style='background: #1a1d29; padding: 0.8rem 1rem; border-radius: 8px;
+                <div style='background: #FFFFFF; padding: 0.8rem 1rem; border-radius: 8px;
                             margin-bottom: 0.5rem; border-left: 4px solid {color};
                             display: flex; justify-content: space-between; align-items: center;'>
                     <span>{icon} {topic}</span>
@@ -118,7 +118,7 @@ with tab_progress:
 
                 st.markdown(
                     f"""
-                    <div style='background: #1a1d29; padding: 0.6rem 1rem; border-radius: 8px;
+                    <div style='background: #FFFFFF; padding: 0.6rem 1rem; border-radius: 8px;
                                 margin-bottom: 0.4rem; border-left: 3px solid {t_color};
                                 display: flex; justify-content: space-between;'>
                         <span>{t_icon} {topic}</span>
@@ -200,13 +200,13 @@ with tab_assignments:
 
                             st.markdown(
                                 f"""
-                                <div style='text-align: center; background: #1a1d29; border-radius: 12px;
+                                <div style='text-align: center; background: #FFFFFF; border-radius: 12px;
                                             padding: 1.5rem; border: 2px solid {score_color}; margin-bottom: 1rem;'>
                                     <span style='font-size: 2.5rem;'>{emoji}</span>
                                     <h3 style='color: {score_color}; margin: 0.3rem 0;'>
                                         {score} / {max_score} ({percentage}%)
                                     </h3>
-                                    <p style='color: #aaa; margin: 0;'>{message}</p>
+                                    <p style='color: #6B7280; margin: 0;'>{message}</p>
                                 </div>
                                 """,
                                 unsafe_allow_html=True,
@@ -231,9 +231,9 @@ with tab_assignments:
                         else:
                             # Show interactive quiz form
                             st.markdown(
-                                "<div style='background: rgba(124,111,255,0.08); border: 1px solid rgba(124,111,255,0.25); "
+                                "<div style='background: rgba(124,111,255,0.08); border: 1px solid rgba(42,214,153,0.2); "
                                 "border-radius: 8px; padding: 0.6rem 1rem; margin-bottom: 1rem;'>"
-                                "<strong style='color: #A78BFA;'>📝 Answer the questions below and submit!</strong>"
+                                "<strong style='color: #1A9068;'>📝 Answer the questions below and submit!</strong>"
                                 "</div>",
                                 unsafe_allow_html=True,
                             )
@@ -242,9 +242,9 @@ with tab_assignments:
                             for i, q in enumerate(questions):
                                 st.markdown(
                                     f"""
-                                    <div style='background: #1a1d29; border-radius: 10px; padding: 1rem;
-                                                margin-bottom: 0.5rem; border: 1px solid #333;'>
-                                        <strong style='color: #6C63FF;'>Q{i + 1}.</strong> {q['question']}
+                                    <div style='background: #FFFFFF; border-radius: 10px; padding: 1rem;
+                                                margin-bottom: 0.5rem; border: 1px solid #E5E7EB;'>
+                                        <strong style='color: #2AD699;'>Q{i + 1}.</strong> {q['question']}
                                     </div>
                                     """,
                                     unsafe_allow_html=True,

@@ -54,13 +54,13 @@ weather_summary = get_weather_summary(weather_city)
 if weather_data and is_bad_weather(weather_data):
     st.markdown(
         f"""
-        <div style='background: linear-gradient(135deg, #b71c1c, #880e4f);
+        <div style='background: linear-gradient(135deg, #FEE2E2, #FECACA);
                     border-radius: 10px; padding: 0.8rem 1.2rem;
-                    margin-bottom: 1rem; border: 1px solid #f44336;'>
-            <span style='font-size: 0.9rem; color: #ffcdd2;'>
+                    margin-bottom: 1rem; border: 1px solid #FCA5A5;'>
+            <span style='font-size: 0.9rem; color: #991B1B;'>
                 ⚠️ <strong>Bad Weather Alert:</strong> {weather_summary}
             </span><br>
-            <span style='font-size: 0.8rem; color: #ef9a9a;'>
+            <span style='font-size: 0.8rem; color: #B91C1C;'>
                 💡 Consider lighter teaching, revision focus, or recorded material today.
             </span>
         </div>
@@ -70,10 +70,10 @@ if weather_data and is_bad_weather(weather_data):
 else:
     st.markdown(
         f"""
-        <div style='background: linear-gradient(135deg, #1a237e, #283593);
+        <div style='background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
                     border-radius: 10px; padding: 0.8rem 1.2rem;
-                    margin-bottom: 1rem; border: 1px solid #3949ab;'>
-            <span style='font-size: 0.9rem; color: #e8eaf6;'>{weather_summary}</span>
+                    margin-bottom: 1rem; border: 1px solid #93C5FD;'>
+            <span style='font-size: 0.9rem; color: #1E3A5F;'>{weather_summary}</span>
         </div>
         """,
         unsafe_allow_html=True,
@@ -165,7 +165,7 @@ with pref_col2:
                 st.markdown(
                     f"<span style='color: {color};'>●</span> "
                     f"_{f['feedback_text']}_ "
-                    f"<span style='color: #666; font-size: 0.75rem;'>({f['category']})</span>",
+                    f"<span style='color: #9CA3AF; font-size: 0.75rem;'>({f['category']})</span>",
                     unsafe_allow_html=True,
                 )
 
@@ -226,9 +226,9 @@ if risk_data:
         zmax=100,
     ))
     fig_heatmap.update_layout(
-        template="plotly_dark",
-        paper_bgcolor="#0E1117",
-        plot_bgcolor="#1a1d29",
+        template="plotly_white",
+        paper_bgcolor="#FFFFFF",
+        plot_bgcolor="#F5F6FA",
         height=max(250, len(names) * 45 + 100),
         margin=dict(l=10, r=10, t=10, b=10),
         xaxis=dict(side="top"),
@@ -249,7 +249,7 @@ if risk_data:
         col = badge_cols[i % len(badge_cols)]
         col.markdown(
             f"""
-            <div style='background: #1a1d29; padding: 0.5rem 0.8rem; border-radius: 8px;
+            <div style='background: #FFFFFF; padding: 0.5rem 0.8rem; border-radius: 8px;
                         margin-bottom: 0.4rem; border-left: 4px solid {color};'>
                 {emoji} <strong>{r['name']}</strong><br>
                 <span style='color: {color}; font-size: 0.85rem;'>
@@ -274,11 +274,11 @@ if absent_students:
 
         st.markdown(
             f"""
-            <div style='background: #1a1d29; padding: 0.7rem 1rem; border-radius: 8px;
+            <div style='background: #FFFFFF; padding: 0.7rem 1rem; border-radius: 8px;
                         margin-bottom: 0.4rem; border-left: 4px solid {severity_color};
                         display: flex; justify-content: space-between; align-items: center;'>
                 <span>🧑‍🎓 <strong>{s['name']}</strong>
-                    <span style='color: #888;'>{streak_warning}</span>
+                    <span style='color: #9CA3AF;'>{streak_warning}</span>
                 </span>
                 <span style='color: {severity_color}; font-weight: bold;'>
                     {s['attendance_rate']}% attendance
@@ -347,9 +347,9 @@ if performance["topic_breakdown"]:
             xaxis_title="Topic",
             yaxis_title="Average Score (%)",
             yaxis_range=[0, 100],
-            template="plotly_dark",
-            paper_bgcolor="#0E1117",
-            plot_bgcolor="#1a1d29",
+            template="plotly_white",
+            paper_bgcolor="#FFFFFF",
+            plot_bgcolor="#F5F6FA",
             height=400,
         )
         st.plotly_chart(fig_bar, use_container_width=True)
@@ -362,9 +362,9 @@ if performance["topic_breakdown"]:
             hole=0.4,
         )
         fig_pie.update_layout(
-            template="plotly_dark",
-            paper_bgcolor="#0E1117",
-            plot_bgcolor="#1a1d29",
+            template="plotly_white",
+            paper_bgcolor="#FFFFFF",
+            plot_bgcolor="#F5F6FA",
             height=400,
         )
         st.plotly_chart(fig_pie, use_container_width=True)
@@ -384,13 +384,13 @@ if top_weak:
 
         st.markdown(
             f"""
-            <div style='background: #1a1d29; padding: 0.6rem 1rem; border-radius: 8px;
+            <div style='background: #FFFFFF; padding: 0.6rem 1rem; border-radius: 8px;
                         margin-bottom: 0.4rem; display: flex; justify-content: space-between;
                         align-items: center;'>
                 <span>
                     <strong style='color: {severity_color};'>#{i+1}</strong>
                     {w['topic']}
-                    <span style='color: #666; font-size: 0.8rem;'>
+                    <span style='color: #9CA3AF; font-size: 0.8rem;'>
                         — {w['students_struggling']}/{w['total_students']} students struggling
                     </span>
                 </span>
@@ -542,11 +542,11 @@ with mgmt_col1:
     with add_bulk_tab:
         st.markdown(
             """
-            <div style='background: rgba(124,111,255,0.08); border: 1px solid rgba(124,111,255,0.25);
+            <div style='background: rgba(124,111,255,0.08); border: 1px solid rgba(42,214,153,0.2);
                         border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 0.8rem; font-size: 0.82rem;'>
-                <strong style='color: #A78BFA;'>Format:</strong> One per line —
+                <strong style='color: #22B07D;'>Format:</strong> One per line —
                 <code>Name, Email, LoginID</code><br>
-                <span style='color: #888;'>Email & LoginID are optional.</span>
+                <span style='color: #9CA3AF;'>Email & LoginID are optional.</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -690,12 +690,12 @@ with share_col2:
 
             st.markdown(
                 f"""
-                <div style='background: #1a1d29; padding: 0.5rem 0.8rem; border-radius: 8px;
-                            margin-bottom: 0.4rem; border-left: 3px solid #6C63FF;
+                <div style='background: #FFFFFF; padding: 0.5rem 0.8rem; border-radius: 8px;
+                            margin-bottom: 0.4rem; border-left: 3px solid #2AD699;
                             font-size: 0.85rem;'>
                     {type_emoji} <strong>{link['content_type'].replace('_', ' ').title()}</strong>
                     — Assigned to: {assigned}
-                    <span style='color: #666;'>({link['created_at'][:10]})</span><br>
+                    <span style='color: #9CA3AF;'>({link['created_at'][:10]})</span><br>
                     <code style='font-size: 0.75rem;'>{link['share_id']}</code>
                 </div>
                 """,
@@ -717,10 +717,10 @@ if upcoming_holidays or today_holiday["is_holiday"]:
     if today_holiday["is_holiday"]:
         st.markdown(
             f"""
-            <div style='background: linear-gradient(135deg, #b71c1c, #880e4f);
+            <div style='background: linear-gradient(135deg, #FEE2E2, #FECACA);
                         border-radius: 10px; padding: 0.8rem 1.2rem;
-                        margin-bottom: 0.8rem; border: 1px solid #f44336;'>
-                <span style='color: #ffcdd2;'>
+                        margin-bottom: 0.8rem; border: 1px solid #FCA5A5;'>
+                <span style='color: #991B1B;'>
                     🎉 <strong>Today is {today_holiday['name']}!</strong>
                     Consider lighter activities or revision-focused sessions.
                 </span>
@@ -733,10 +733,10 @@ if upcoming_holidays or today_holiday["is_holiday"]:
         for h in upcoming_holidays:
             if h["days_until"] == 0:
                 continue  # Already shown above
-            badge_color = "#FF9800" if h["days_until"] <= 3 else "#6C63FF"
+            badge_color = "#FF9800" if h["days_until"] <= 3 else "#2AD699"
             st.markdown(
                 f"""
-                <div style='background: #1a1d29; padding: 0.5rem 0.8rem; border-radius: 8px;
+                <div style='background: #FFFFFF; padding: 0.5rem 0.8rem; border-radius: 8px;
                             margin-bottom: 0.3rem; border-left: 3px solid {badge_color};
                             display: flex; justify-content: space-between; font-size: 0.85rem;'>
                     <span>🗓️ {h['name']} — {h['day_of_week']}</span>

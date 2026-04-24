@@ -15,7 +15,7 @@ from backend.slide_generator import generate_slide_content, build_pptx
 page_header(
     "🖥️", "Lesson Slide Maker",
     "Generate a ready-to-present PowerPoint from your uploaded curriculum.",
-    accent="#A78BFA",
+    accent="#22B07D",
 )
 
 # ── Curriculum Check ─────────────────────────────────────────────────────────
@@ -39,10 +39,10 @@ if not available_topics:
 # ============================================================
 st.markdown(
     """
-    <div style='background: linear-gradient(135deg, rgba(124,111,255,0.12), rgba(124,111,255,0.04));
-                border: 1px solid rgba(124,111,255,0.25); border-radius: 14px;
+    <div style='background: rgba(42,214,153,0.06);
+                border: 1px solid rgba(42,214,153,0.2); border-radius: 14px;
                 padding: 1.2rem 1.4rem; margin-bottom: 1.2rem;'>
-        <div style='font-size: 0.75rem; color: #A78BFA; font-weight: 700;
+        <div style='font-size: 0.75rem; color: #1A9068; font-weight: 700;
                     text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.6rem;'>
             ⚙️ Presentation Settings
         </div>
@@ -202,9 +202,9 @@ if "slide_data" in st.session_state and "pptx_bytes" in st.session_state:
     for i, slide in enumerate(slides, start=1):
         stype = slide.get("type", "content")
         type_labels = {
-            "title":      ("🖥️", "Title Slide",      "#7C6FFF"),
-            "objectives": ("🎯", "Objectives",        "#A78BFA"),
-            "content":    ("📖", "Content",           "#C4B5FD"),
+            "title":      ("🖥️", "Title Slide",      "#2AD699"),
+            "objectives": ("🎯", "Objectives",        "#22B07D"),
+            "content":    ("📖", "Content",           "#1A9068"),
             "key_terms":  ("📚", "Key Terms",         "#60A5FA"),
             "quiz":       ("🧠", "Quiz Question",     "#FB923C"),
             "summary":    ("✅", "Summary / Recap",   "#22C55E"),
@@ -254,8 +254,8 @@ if "slide_data" in st.session_state and "pptx_bytes" in st.session_state:
             notes = slide.get("speaker_notes", "")
             if notes:
                 st.markdown(
-                    f"<div style='background:rgba(124,111,255,0.08); border-left:3px solid #7C6FFF;"
+                    f"<div style='background:rgba(42,214,153,0.06); border-left:3px solid #22B07D;"
                     f"border-radius:4px; padding:0.5rem 0.8rem; margin-top:0.5rem; font-size:0.84rem;"
-                    f"color:#C4B5FD;'>🎙️ <strong>Speaker Notes:</strong> {notes}</div>",
+                    f"color:#4B5563;'>🎙️ <strong>Speaker Notes:</strong> {notes}</div>",
                     unsafe_allow_html=True,
                 )

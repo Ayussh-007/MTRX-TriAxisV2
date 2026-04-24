@@ -59,12 +59,12 @@ emoji, label = type_labels.get(content_type, ("📄", "Content"))
 
 st.markdown(
     f"""
-    <div style='background: linear-gradient(135deg, #1a1d29, #2a2d3a);
-                border-radius: 12px; padding: 1.5rem; border: 1px solid #333;
+    <div style='background: #FFFFFF;
+                border-radius: 12px; padding: 1.5rem; border: 1px solid #E5E7EB;
                 margin-bottom: 1rem;'>
         <span style='font-size: 2rem;'>{emoji}</span>
-        <h3 style='color: #6C63FF; margin-top: 0.5rem;'>{label}</h3>
-        <p style='color: #888; font-size: 0.85rem;'>
+        <h3 style='color: #22B07D; margin-top: 0.5rem;'>{label}</h3>
+        <p style='color: #9CA3AF; font-size: 0.85rem;'>
             Shared on {content.get('created_at', 'Unknown date')[:10]}
         </p>
     </div>
@@ -86,9 +86,9 @@ if content_type == "quiz":
         for i, q in enumerate(questions):
             st.markdown(
                 f"""
-                <div style='background: #1a1d29; border-radius: 10px; padding: 1rem;
-                            margin-bottom: 0.8rem; border: 1px solid #333;'>
-                    <strong style='color: #6C63FF;'>Q{i + 1}.</strong> {q.get('question', '')}
+                <div style='background: #FFFFFF; border-radius: 10px; padding: 1rem;
+                            margin-bottom: 0.8rem; border: 1px solid #E5E7EB;'>
+                    <strong style='color: #2AD699;'>Q{i + 1}.</strong> {q.get('question', '')}
                 </div>
                 """,
                 unsafe_allow_html=True,

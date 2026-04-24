@@ -85,9 +85,9 @@ if "generated_quiz" in st.session_state:
 
         st.markdown(
             f"""
-            <div style='background: #1a1d29; border-radius: 10px; padding: 1.2rem;
-                        margin-bottom: 0.5rem; border: 1px solid #333;'>
-                <strong style='color: #6C63FF;'>Q{i + 1}.</strong> {q['question']}
+            <div style='background: #FFFFFF; border-radius: 10px; padding: 1.2rem;
+                        margin-bottom: 0.5rem; border: 1px solid #E5E7EB;'>
+                <strong style='color: #2AD699;'>Q{i + 1}.</strong> {q['question']}
             </div>
             """,
             unsafe_allow_html=True,
@@ -96,7 +96,7 @@ if "generated_quiz" in st.session_state:
         for key, val in options.items():
             is_correct = key.upper() == correct.upper()
             badge = " ✅" if is_correct else ""
-            color = "#4CAF50" if is_correct else "#ccc"
+            color = "#4CAF50" if is_correct else "#4B5563"
             st.markdown(
                 f"<span style='color: {color}; margin-left: 1.2rem;'>"
                 f"**{key}.** {val}{badge}</span>",
@@ -175,7 +175,7 @@ if "generated_quiz" in st.session_state:
                         border-radius: 10px; padding: 1rem 1.2rem; text-align: center;'>
                 <span style='font-size: 1.5rem;'>✅</span><br>
                 <strong style='color: #22C55E;'>Quiz has been shared with students!</strong><br>
-                <span style='color: #888; font-size: 0.85rem;'>
+                <span style='color: #9CA3AF; font-size: 0.85rem;'>
                     Students can solve it in their Student Portal → Assignments tab.
                 </span>
             </div>

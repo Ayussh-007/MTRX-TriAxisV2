@@ -26,7 +26,7 @@ from backend.ui_components import page_header
 page_header(
     "🎒", "Student Manager",
     "Add students, manage attendance, and track individual performance.",
-    accent="#A78BFA",
+    accent="#22B07D",
 )
 
 # ===================================================================
@@ -60,14 +60,14 @@ with add_tab_single:
 with add_tab_bulk:
     st.markdown(
         """
-        <div style='background: rgba(124,111,255,0.08); border: 1px solid rgba(124,111,255,0.25);
+        <div style='background: rgba(124,111,255,0.08); border: 1px solid rgba(42,214,153,0.2);
                     border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1rem; font-size: 0.85rem;'>
-            <strong style='color: #A78BFA;'>Format:</strong> One student per line —
+            <strong style='color: #22B07D;'>Format:</strong> One student per line —
             <code>Name, Email, LoginID</code><br>
-            <span style='color: #888;'>Email and LoginID are optional. Examples:</span><br>
-            <code style='color: #ccc;'>Ayush Mhatre, ayush.mhatre25@sakec.ac.in, AI251030</code><br>
-            <code style='color: #ccc;'>Riya Patel</code><br>
-            <code style='color: #ccc;'>Karan Singh, , STU003</code>
+            <span style='color: #9CA3AF;'>Email and LoginID are optional. Examples:</span><br>
+            <code style='color: #4B5563;'>Ayush Mhatre, ayush.mhatre25@sakec.ac.in, AI251030</code><br>
+            <code style='color: #4B5563;'>Riya Patel</code><br>
+            <code style='color: #4B5563;'>Karan Singh, , STU003</code>
         </div>
         """,
         unsafe_allow_html=True,
@@ -132,7 +132,7 @@ st.markdown(
     f"""
     <div style='background: rgba(124,111,255,0.06); border: 1px solid rgba(124,111,255,0.2);
                 border-radius: 10px; padding: 0.6rem 1rem; margin-bottom: 0.8rem;
-                font-size: 0.85rem; color: #A78BFA;'>
+                font-size: 0.85rem; color: #22B07D;'>
         ✅ Check the box = <strong>Present</strong> &nbsp;|&nbsp;
         Unchecked = <strong>Absent</strong> &nbsp;|&nbsp;
         Date: <strong>{att_date.strftime('%A, %d %B %Y')}</strong>
@@ -225,12 +225,12 @@ if student:
         st.markdown("---")
         st.markdown(
             f"""
-            <div style='background: linear-gradient(135deg, #4a0000, #1a1d29);
+            <div style='background: linear-gradient(135deg, #FEE2E2, #FFF1F2);
                         border-radius: 10px; padding: 1rem 1.2rem;
-                        border: 1px solid #F44336; margin-bottom: 1rem;'>
+                        border: 1px solid #FCA5A5; margin-bottom: 1rem;'>
                 <span style='font-size: 1.1rem;'>⚠️ <strong style='color: #F44336;'>
                     Attendance Alert</strong></span><br>
-                <span style='color: #ccc; font-size: 0.9rem;'>
+                <span style='color: #4B5563; font-size: 0.9rem;'>
                     {att_status['status']} — Attendance rate: {att_status['attendance_rate']}%
                     {f" | Absent {att_status['absence_streak']} consecutive days" if att_status['absence_streak'] > 0 else ""}
                 </span>
@@ -280,7 +280,7 @@ if student:
 
                 st.markdown(
                     f"""
-                    <div style='background: #1a1d29; padding: 0.6rem 1rem; border-radius: 8px;
+                    <div style='background: #FFFFFF; padding: 0.6rem 1rem; border-radius: 8px;
                                 margin-bottom: 0.4rem; border-left: 3px solid {t_color};
                                 display: flex; justify-content: space-between;'>
                         <span>{t_icon} {topic}</span>
@@ -320,7 +320,7 @@ if student:
 
             st.markdown(
                 f"""
-                <div style='background: #1a1d29; padding: 0.8rem 1rem; border-radius: 8px;
+                <div style='background: #FFFFFF; padding: 0.8rem 1rem; border-radius: 8px;
                             margin-bottom: 0.5rem; border-left: 4px solid {color};
                             display: flex; justify-content: space-between; align-items: center;'>
                     <span>{icon} {topic}</span>

@@ -15,7 +15,7 @@ from backend.ui_components import page_header, section_header, info_card
 page_header(
     "📄", "Upload Curriculum",
     "Upload a textbook or curriculum PDF — AI will extract, clean, chunk and index it.",
-    accent="#A78BFA",
+    accent="#22B07D",
 )
 
 # ----- File Upload -----
@@ -48,8 +48,8 @@ if uploaded_file is not None:
     st.markdown(
         f"""
         <div style='
-            background: #12151F;
-            border: 1px solid #252840;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
             border-radius: 10px;
             padding: 0.9rem 1.1rem;
             display: flex;
@@ -59,7 +59,7 @@ if uploaded_file is not None:
         '>
             <span style='font-size:1.6rem;'>📄</span>
             <div>
-                <div style='font-weight:600; color:#E8EAF0; font-size:0.9rem;'>{uploaded_file.name}</div>
+                <div style='font-weight:600; color:#1A1D2E; font-size:0.9rem;'>{uploaded_file.name}</div>
                 <div style='color:#6B7280; font-size:0.78rem; margin-top:2px;'>
                     {uploaded_file.size / 1024:.1f} KB · PDF Document
                 </div>
@@ -114,7 +114,7 @@ if uploaded_file is not None:
 # ----- Chunk Preview -----
 if "last_chunks" in st.session_state and st.session_state["last_chunks"]:
     st.markdown("<hr>", unsafe_allow_html=True)
-    section_header("📋 Processed Chunks Preview", accent="#A78BFA")
+    section_header("📋 Processed Chunks Preview", accent="#22B07D")
 
     chunks = st.session_state["last_chunks"]
     st.caption(f"Showing {min(10, len(chunks))} of {len(chunks)} total chunks")
@@ -126,7 +126,7 @@ if "last_chunks" in st.session_state and st.session_state["last_chunks"]:
 
 # ----- Existing Files -----
 st.markdown("<hr>", unsafe_allow_html=True)
-section_header("📁 Uploaded Files", accent="#A78BFA")
+section_header("📁 Uploaded Files", accent="#22B07D")
 
 upload_dir = UPLOADS_DIR
 if os.path.exists(upload_dir):
@@ -136,11 +136,11 @@ if os.path.exists(upload_dir):
             file_size = os.path.getsize(os.path.join(upload_dir, f)) / 1024
             st.markdown(
                 f"""
-                <div style='background:#12151F; border:1px solid #252840; border-radius:8px;
+                <div style='background:#FFFFFF; border:1px solid #E5E7EB; border-radius:8px;
                             padding:0.6rem 0.9rem; margin-bottom:0.4rem;
                             display:flex; align-items:center; gap:0.6rem;'>
                     <span>📄</span>
-                    <span style='color:#E8EAF0; font-size:0.85rem; font-weight:500;'>{f}</span>
+                    <span style='color:#1A1D2E; font-size:0.85rem; font-weight:500;'>{f}</span>
                     <span style='color:#6B7280; font-size:0.78rem; margin-left:auto;'>{file_size:.1f} KB</span>
                 </div>
                 """,

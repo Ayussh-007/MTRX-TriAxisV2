@@ -18,19 +18,19 @@ st.markdown(
     """
     <style>
     @keyframes glow {
-        0%, 100% { box-shadow: 0 0 20px rgba(124,111,255,0.3); }
-        50%       { box-shadow: 0 0 40px rgba(124,111,255,0.6); }
+        0%, 100% { box-shadow: 0 0 20px rgba(42,214,153,0.2); }
+        50%       { box-shadow: 0 0 40px rgba(42,214,153,0.35); }
     }
     </style>
     <div style='text-align:center; padding:2.5rem 0 1.5rem 0;'>
         <div style='
             display:inline-flex; width:80px; height:80px;
-            background:linear-gradient(135deg,#7C6FFF,#A78BFA);
+            background:linear-gradient(135deg,#2AD699,#22B07D);
             border-radius:20px; align-items:center; justify-content:center;
             font-size:2.5rem; margin-bottom:1rem;
             animation: glow 2.5s ease-in-out infinite;
         '>🔐</div>
-        <h1 style='font-size:2rem; font-weight:800; color:#E8EAF0; margin:0 0 0.3rem 0;'>
+        <h1 style='font-size:2rem; font-weight:800; color:#1A1D2E; margin:0 0 0.3rem 0;'>
             Student Login
         </h1>
         <p style='color:#6B7280; font-size:0.95rem; margin:0;'>
@@ -50,8 +50,8 @@ with col_c:
     st.markdown(
         """
         <div style='
-            background: linear-gradient(135deg, #12151F, #1A1D2E);
-            border: 1px solid #252840;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
             border-radius: 16px;
             padding: 2rem 1.8rem;
             margin-bottom: 1rem;
@@ -61,7 +61,7 @@ with col_c:
     )
 
     st.markdown(
-        "<p style='font-size:0.85rem; font-weight:700; color:#A78BFA; margin-bottom:1rem; "
+        "<p style='font-size:0.85rem; font-weight:700; color:#22B07D; margin-bottom:1rem; "
         "text-transform:uppercase; letter-spacing:0.5px;'>📝 Login Details</p>",
         unsafe_allow_html=True,
     )

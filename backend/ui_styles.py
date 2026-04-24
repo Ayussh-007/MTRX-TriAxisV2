@@ -1,7 +1,7 @@
 # backend/ui_styles.py
 """
 Global CSS injection for MTRX-TriAxis Streamlit app.
-Premium, launch-ready dark-mode design system.
+Modern light-mode dashboard design system inspired by Realty Hub.
 Import and call inject_global_styles() once in app.py.
 """
 
@@ -14,31 +14,32 @@ GLOBAL_CSS = """
 
 /* ── Root Variables ──────────────────────────────────── */
 :root {
-    --bg:        #0A0C14;
-    --surface:   #12151F;
-    --surface2:  #1A1D2E;
-    --surface3:  #22253A;
-    --border:    #252840;
-    --border2:   #2E3150;
-    --accent:    #7C6FFF;
-    --accent2:   #A78BFA;
-    --accent3:   #C4B5FD;
+    --bg:        #F5F6FA;
+    --surface:   #FFFFFF;
+    --surface2:  #F0F2F8;
+    --surface3:  #E8EBF2;
+    --border:    #E5E7EB;
+    --border2:   #D1D5DB;
+    --accent:    #2AD699;
+    --accent2:   #22B07D;
+    --accent3:   #1A9068;
     --success:   #22C55E;
     --success-bg: rgba(34,197,94,0.08);
     --warning:   #F59E0B;
     --warning-bg: rgba(245,158,11,0.08);
     --danger:    #EF4444;
     --danger-bg: rgba(239,68,68,0.08);
-    --text:      #E8EAF0;
-    --text2:     #C8CBD5;
-    --muted:     #6B7280;
-    --radius:    14px;
-    --radius-sm: 10px;
+    --text:      #1A1D2E;
+    --text2:     #4B5563;
+    --muted:     #9CA3AF;
+    --radius:    16px;
+    --radius-sm: 12px;
     --radius-xs: 8px;
-    --shadow:    0 4px 24px rgba(0,0,0,0.3);
-    --shadow-accent: 0 4px 20px rgba(124,111,255,0.25);
-    --glass:     rgba(18,21,31,0.7);
-    --glass-border: rgba(255,255,255,0.06);
+    --shadow:    0 2px 12px rgba(0,0,0,0.06);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-accent: 0 4px 20px rgba(42,214,153,0.18);
+    --glass:     rgba(255,255,255,0.85);
+    --glass-border: rgba(0,0,0,0.04);
 }
 
 /* ── Global Font ─────────────────────────────────────── */
@@ -70,6 +71,7 @@ span[style*="material"],
 /* ── Typography ──────────────────────────────────────── */
 h1, h2, h3 {
     letter-spacing: -0.4px !important;
+    color: var(--text) !important;
 }
 h1 {
     font-weight: 800 !important;
@@ -78,7 +80,6 @@ h1 {
 h2 {
     font-weight: 700 !important;
     font-size: 1.25rem !important;
-    color: var(--text) !important;
 }
 h3 {
     font-weight: 700 !important;
@@ -95,8 +96,9 @@ h3 {
 
 /* ── Sidebar ─────────────────────────────────────────── */
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0D0F1A 0%, #12151F 100%) !important;
+    background: #FFFFFF !important;
     border-right: 1px solid var(--border) !important;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.03) !important;
 }
 [data-testid="stSidebar"] .stMarkdown p {
     color: var(--text);
@@ -107,23 +109,26 @@ h3 {
     border-radius: var(--radius-xs) !important;
     transition: all 0.25s cubic-bezier(0.4,0,0.2,1) !important;
     font-weight: 500 !important;
+    color: var(--text2) !important;
 }
 [data-testid="stSidebar"] button[kind="secondary"]:hover {
-    background: rgba(124,111,255,0.08) !important;
+    background: rgba(42,214,153,0.08) !important;
     transform: translateX(4px);
+    color: var(--accent2) !important;
 }
 
-/* Active nav item */
+/* Active nav item — mint green pill like Realty Hub */
 [data-testid="stSidebar"] [aria-selected="true"] {
-    background: linear-gradient(135deg, rgba(124,111,255,0.18), rgba(167,139,250,0.08)) !important;
+    background: #C8F5E0 !important;
     border-left: 3px solid var(--accent) !important;
     font-weight: 600 !important;
+    color: var(--accent3) !important;
+    border-radius: var(--radius-xs) !important;
 }
 
 /* ── Buttons ─────────────────────────────────────────── */
 .stButton > button[kind="primary"] {
-    background: linear-gradient(135deg, #7C6FFF 0%, #9F8FFF 50%, #A78BFA 100%) !important;
-    background-size: 200% 200% !important;
+    background: linear-gradient(135deg, #2AD699 0%, #22B07D 100%) !important;
     border: none !important;
     border-radius: var(--radius-sm) !important;
     font-weight: 600 !important;
@@ -132,19 +137,18 @@ h3 {
     color: white !important;
     padding: 0.55rem 1.2rem !important;
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
-    box-shadow: 0 4px 16px rgba(124,111,255,0.35) !important;
+    box-shadow: 0 4px 16px rgba(42,214,153,0.25) !important;
 }
 .stButton > button[kind="primary"]:hover {
     transform: translateY(-2px) scale(1.01) !important;
-    box-shadow: 0 8px 30px rgba(124,111,255,0.5) !important;
-    background-position: 100% 50% !important;
-    filter: brightness(1.1) !important;
+    box-shadow: 0 8px 30px rgba(42,214,153,0.35) !important;
+    filter: brightness(1.05) !important;
 }
 .stButton > button[kind="primary"]:active {
     transform: translateY(0px) scale(0.99) !important;
 }
 .stButton > button[kind="secondary"] {
-    background: var(--surface2) !important;
+    background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     border-radius: var(--radius-sm) !important;
     color: var(--text) !important;
@@ -154,25 +158,26 @@ h3 {
 .stButton > button[kind="secondary"]:hover {
     border-color: var(--accent) !important;
     color: var(--accent2) !important;
-    background: rgba(124,111,255,0.06) !important;
+    background: rgba(42,214,153,0.04) !important;
     transform: translateY(-1px) !important;
 }
 
 /* ── Metric Cards ────────────────────────────────────── */
 [data-testid="stMetric"] {
-    background: linear-gradient(145deg, var(--surface), var(--surface2)) !important;
+    background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     border-radius: var(--radius) !important;
     padding: 1.1rem 1.3rem !important;
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow) !important;
 }
 [data-testid="stMetric"]::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 2px;
+    height: 3px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -212,7 +217,7 @@ h3 {
 .stTextInput > div > div > input:focus,
 .stTextArea > div > div > textarea:focus {
     border-color: var(--accent) !important;
-    box-shadow: 0 0 0 3px rgba(124,111,255,0.12), 0 0 20px rgba(124,111,255,0.08) !important;
+    box-shadow: 0 0 0 3px rgba(42,214,153,0.12), 0 0 20px rgba(42,214,153,0.06) !important;
 }
 .stSelectbox > div > div {
     background: var(--surface) !important;
@@ -227,15 +232,16 @@ h3 {
 
 /* ── Expanders ───────────────────────────────────────── */
 [data-testid="stExpander"] {
-    background: linear-gradient(135deg, var(--surface), rgba(26,29,46,0.8)) !important;
+    background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     border-radius: var(--radius) !important;
     overflow: hidden !important;
     transition: all 0.25s cubic-bezier(0.4,0,0.2,1) !important;
+    box-shadow: var(--shadow) !important;
 }
 [data-testid="stExpander"]:hover {
     border-color: var(--accent) !important;
-    box-shadow: 0 2px 12px rgba(124,111,255,0.08) !important;
+    box-shadow: 0 2px 12px rgba(42,214,153,0.08) !important;
 }
 [data-testid="stExpander"] summary {
     font-weight: 600 !important;
@@ -253,12 +259,11 @@ h3 {
 
 /* ── Tabs ────────────────────────────────────────────── */
 .stTabs [data-baseweb="tab-list"] {
-    background: var(--surface) !important;
+    background: var(--surface2) !important;
     border-radius: var(--radius-sm) !important;
     padding: 4px !important;
     border: 1px solid var(--border) !important;
     gap: 4px !important;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
 }
 .stTabs [data-baseweb="tab"] {
     background: transparent !important;
@@ -271,34 +276,32 @@ h3 {
 }
 .stTabs [data-baseweb="tab"]:hover {
     color: var(--text) !important;
-    background: rgba(124,111,255,0.06) !important;
+    background: rgba(42,214,153,0.06) !important;
 }
 .stTabs [aria-selected="true"] {
-    background: linear-gradient(135deg, #7C6FFF, #A78BFA) !important;
+    background: linear-gradient(135deg, #2AD699, #22B07D) !important;
     color: white !important;
     font-weight: 600 !important;
-    box-shadow: 0 2px 10px rgba(124,111,255,0.3) !important;
+    box-shadow: 0 2px 10px rgba(42,214,153,0.25) !important;
 }
 
 /* ── Alerts / Info boxes ─────────────────────────────── */
 .stAlert {
     border-radius: var(--radius) !important;
     border-width: 1px !important;
-    backdrop-filter: blur(8px) !important;
 }
 [data-testid="stToast"] {
     border-radius: var(--radius) !important;
-    background: var(--surface2) !important;
+    background: var(--surface) !important;
     border: 1px solid var(--border) !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
-    backdrop-filter: blur(16px) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
 }
 
 /* ── Progress Bar ────────────────────────────────────── */
 .stProgress > div > div {
-    background: linear-gradient(90deg, #7C6FFF, #A78BFA, #C4B5FD) !important;
+    background: linear-gradient(90deg, #2AD699, #22B07D, #1A9068) !important;
     border-radius: var(--radius-sm) !important;
-    box-shadow: 0 0 12px rgba(124,111,255,0.3) !important;
+    box-shadow: 0 0 12px rgba(42,214,153,0.2) !important;
 }
 
 /* ── Dividers ────────────────────────────────────────── */
@@ -313,7 +316,7 @@ hr {
 .stSlider [data-baseweb="slider"] div[role="slider"] {
     background: var(--accent) !important;
     border: 3px solid var(--accent2) !important;
-    box-shadow: 0 0 12px rgba(124,111,255,0.4) !important;
+    box-shadow: 0 0 12px rgba(42,214,153,0.3) !important;
 }
 
 /* ── Checkbox ────────────────────────────────────────── */
@@ -338,12 +341,12 @@ hr {
 }
 .stRadio label:hover {
     border-color: var(--accent) !important;
-    background: rgba(124,111,255,0.05) !important;
+    background: rgba(42,214,153,0.04) !important;
 }
 .stRadio label[data-checked="true"],
 .stRadio label:has(input:checked) {
     border-color: var(--accent) !important;
-    background: rgba(124,111,255,0.1) !important;
+    background: rgba(42,214,153,0.08) !important;
 }
 
 /* ── Multiselect ─────────────────────────────────────── */
@@ -372,25 +375,25 @@ hr {
     border-radius: var(--radius-xs) !important;
 }
 [data-testid="stSidebar"] .stInfo {
-    background: rgba(124,111,255,0.08) !important;
-    border: 1px solid rgba(124,111,255,0.3) !important;
+    background: rgba(42,214,153,0.08) !important;
+    border: 1px solid rgba(42,214,153,0.3) !important;
     border-radius: var(--radius-xs) !important;
 }
 
 /* ── Form submit button ──────────────────────────────── */
 [data-testid="stFormSubmitButton"] button {
     width: 100% !important;
-    background: linear-gradient(135deg, #7C6FFF, #A78BFA) !important;
+    background: linear-gradient(135deg, #2AD699, #22B07D) !important;
     border: none !important;
     border-radius: var(--radius-sm) !important;
     font-weight: 600 !important;
     color: white !important;
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
-    box-shadow: 0 4px 15px rgba(124,111,255,0.3) !important;
+    box-shadow: 0 4px 15px rgba(42,214,153,0.2) !important;
 }
 [data-testid="stFormSubmitButton"] button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(124,111,255,0.5) !important;
+    box-shadow: 0 8px 25px rgba(42,214,153,0.35) !important;
 }
 
 /* ── Scrollbar ───────────────────────────────────────── */
@@ -402,7 +405,7 @@ hr {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--border);
+    background: var(--border2);
     border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -431,20 +434,21 @@ hr {
     font-size: 0.78rem !important;
 }
 
-/* ── Plotly charts — glass container ─────────────────── */
+/* ── Plotly charts — clean container ─────────────────── */
 .stPlotlyChart {
     border-radius: var(--radius) !important;
     overflow: hidden !important;
     border: 1px solid var(--border) !important;
     background: var(--surface) !important;
+    box-shadow: var(--shadow) !important;
 }
 
 /* ── Animated gradient accent bar (top of page) ──────── */
 .main::before {
     content: '';
     display: block;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2), #F472B6, var(--accent));
+    height: 3px;
+    background: linear-gradient(90deg, #2AD699, #22B07D, #38BDF8, #2AD699);
     background-size: 300% 100%;
     animation: accentBar 6s ease infinite;
     margin-bottom: 0.5rem;
@@ -458,8 +462,8 @@ hr {
 
 /* ── Selection highlight ─────────────────────────────── */
 ::selection {
-    background: rgba(124,111,255,0.3);
-    color: white;
+    background: rgba(42,214,153,0.25);
+    color: var(--text);
 }
 
 /* ── Smooth page transitions ─────────────────────────── */

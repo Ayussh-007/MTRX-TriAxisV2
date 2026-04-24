@@ -63,10 +63,10 @@ with st.sidebar:
                 align-items: center;
                 justify-content: center;
                 width: 38px; height: 38px;
-                background: linear-gradient(135deg, #7C6FFF, #A78BFA);
+                background: linear-gradient(135deg, #2AD699, #22B07D);
                 border-radius: 10px;
                 font-size: 1.2rem;
-                box-shadow: 0 4px 14px rgba(124,111,255,0.35);
+                box-shadow: 0 4px 14px rgba(42,214,153,0.25);
                 flex-shrink: 0;
             '>🎓</div>
             <div>
@@ -74,12 +74,12 @@ with st.sidebar:
                     font-size: 1rem;
                     font-weight: 800;
                     letter-spacing: -0.3px;
-                    background: linear-gradient(135deg, #7C6FFF, #C4B5FD);
+                    background: linear-gradient(135deg, #2AD699, #1A9068);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     line-height: 1.2;
                 '>MTRX-TriAxis</div>
-                <div style='font-size: 0.62rem; color: #6B7280; letter-spacing: 0.4px;
+                <div style='font-size: 0.62rem; color: #9CA3AF; letter-spacing: 0.4px;
                             text-transform: uppercase; line-height: 1;'>AI Classroom</div>
             </div>
         </div>
@@ -87,7 +87,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    st.markdown("<div style='border-top:1px solid #252840; margin: 0 0 0.6rem 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='border-top:1px solid #E5E7EB; margin: 0 0 0.6rem 0;'></div>", unsafe_allow_html=True)
 
     # ── Role Badge ───────────────────────────────
     from backend.auth import is_student_logged_in, get_logged_in_student
@@ -96,8 +96,8 @@ with st.sidebar:
         st.markdown(
             f"""
             <div style='
-                background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,197,94,0.05));
-                border: 1px solid rgba(34,197,94,0.3);
+                background: rgba(34,197,94,0.08);
+                border: 1px solid rgba(34,197,94,0.2);
                 border-radius: 10px;
                 padding: 0.55rem 0.8rem;
                 margin-bottom: 0.5rem;
@@ -107,7 +107,7 @@ with st.sidebar:
                 <div>
                     <div style='color:#22C55E; font-size:0.7rem; font-weight:700;
                                 text-transform:uppercase; letter-spacing:0.4px;'>Student</div>
-                    <div style='color:#E8EAF0; font-size:0.85rem; font-weight:600;'>{student['name']}</div>
+                    <div style='color:#1A1D2E; font-size:0.85rem; font-weight:600;'>{student['name']}</div>
                 </div>
             </div>
             """,
@@ -117,8 +117,8 @@ with st.sidebar:
         st.markdown(
             """
             <div style='
-                background: linear-gradient(135deg, rgba(124,111,255,0.12), rgba(124,111,255,0.05));
-                border: 1px solid rgba(124,111,255,0.3);
+                background: rgba(42,214,153,0.08);
+                border: 1px solid rgba(42,214,153,0.2);
                 border-radius: 10px;
                 padding: 0.55rem 0.8rem;
                 margin-bottom: 0.5rem;
@@ -126,20 +126,20 @@ with st.sidebar:
             '>
                 <span style='font-size: 1rem;'>👩‍🏫</span>
                 <div>
-                    <div style='color:#A78BFA; font-size:0.7rem; font-weight:700;
+                    <div style='color:#22B07D; font-size:0.7rem; font-weight:700;
                                 text-transform:uppercase; letter-spacing:0.4px;'>Mode</div>
-                    <div style='color:#E8EAF0; font-size:0.85rem; font-weight:600;'>Teacher</div>
+                    <div style='color:#1A1D2E; font-size:0.85rem; font-weight:600;'>Teacher</div>
                 </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    st.markdown("<div style='border-top:1px solid #252840; margin: 0.5rem 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='border-top:1px solid #E5E7EB; margin: 0.5rem 0;'></div>", unsafe_allow_html=True)
 
     # ── System Status Cards ───────────────────────
     st.markdown(
-        "<span style='font-size:0.7rem; color:#6B7280; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;'>System Status</span>",
+        "<span style='font-size:0.7rem; color:#9CA3AF; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;'>System Status</span>",
         unsafe_allow_html=True,
     )
 
@@ -153,11 +153,11 @@ with st.sidebar:
     if ollama_ok:
         st.markdown(
             """
-            <div style='background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.25);
+            <div style='background:rgba(34,197,94,0.06); border:1px solid rgba(34,197,94,0.2);
                         border-radius:8px; padding:0.4rem 0.7rem; margin:0.3rem 0;
                         display:flex; align-items:center; gap:0.5rem;'>
                 <span style='color:#22C55E; font-size:0.9rem;'>●</span>
-                <span style='color:#D1FAE5; font-size:0.82rem; font-weight:500;'>Ollama Connected</span>
+                <span style='color:#1A1D2E; font-size:0.82rem; font-weight:500;'>Ollama Connected</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -165,11 +165,11 @@ with st.sidebar:
     else:
         st.markdown(
             """
-            <div style='background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25);
+            <div style='background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2);
                         border-radius:8px; padding:0.4rem 0.7rem; margin:0.3rem 0;
                         display:flex; align-items:center; gap:0.5rem;'>
                 <span style='color:#EF4444; font-size:0.9rem;'>●</span>
-                <span style='color:#FEE2E2; font-size:0.82rem; font-weight:500;'>Ollama Offline</span>
+                <span style='color:#1A1D2E; font-size:0.82rem; font-weight:500;'>Ollama Offline</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -180,11 +180,11 @@ with st.sidebar:
     if vc_ok:
         st.markdown(
             """
-            <div style='background:rgba(124,111,255,0.08); border:1px solid rgba(124,111,255,0.25);
+            <div style='background:rgba(42,214,153,0.06); border:1px solid rgba(42,214,153,0.2);
                         border-radius:8px; padding:0.4rem 0.7rem; margin:0.3rem 0;
                         display:flex; align-items:center; gap:0.5rem;'>
-                <span style='color:#A78BFA; font-size:0.9rem;'>📚</span>
-                <span style='color:#EDE9FE; font-size:0.82rem; font-weight:500;'>Curriculum Loaded</span>
+                <span style='color:#2AD699; font-size:0.9rem;'>📚</span>
+                <span style='color:#1A1D2E; font-size:0.82rem; font-weight:500;'>Curriculum Loaded</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -192,11 +192,11 @@ with st.sidebar:
     else:
         st.markdown(
             """
-            <div style='background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25);
+            <div style='background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2);
                         border-radius:8px; padding:0.4rem 0.7rem; margin:0.3rem 0;
                         display:flex; align-items:center; gap:0.5rem;'>
                 <span style='color:#F59E0B; font-size:0.9rem;'>📚</span>
-                <span style='color:#FEF3C7; font-size:0.82rem; font-weight:500;'>No Curriculum Yet</span>
+                <span style='color:#1A1D2E; font-size:0.82rem; font-weight:500;'>No Curriculum Yet</span>
             </div>
             """,
             unsafe_allow_html=True,
@@ -207,8 +207,8 @@ with st.sidebar:
     st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
     st.markdown(
         """
-        <div style='text-align:center; color:#3D4150; font-size:0.7rem;
-                    padding: 0.8rem 0; border-top: 1px solid #252840;'>
+        <div style='text-align:center; color:#9CA3AF; font-size:0.7rem;
+                    padding: 0.8rem 0; border-top: 1px solid #E5E7EB;'>
             MTRX-TriAxis v2.0 · Built with ❤️
         </div>
         """,

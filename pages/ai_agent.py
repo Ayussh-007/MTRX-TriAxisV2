@@ -22,30 +22,30 @@ page_header(
 # ----- Agent Architecture Diagram -----
 st.markdown(
     """
-    <div style='background: #1a1d29; border-radius: 10px; padding: 1.2rem;
-                border: 1px solid #333; margin-bottom: 1rem;'>
-        <p style='text-align: center; color: #6C63FF; font-weight: bold; margin-bottom: 0.8rem;'>
+    <div style='background: #FFFFFF; border-radius: 10px; padding: 1.2rem;
+                border: 1px solid #E5E7EB; margin-bottom: 1rem;'>
+        <p style='text-align: center; color: #2AD699; font-weight: bold; margin-bottom: 0.8rem;'>
             🔄 Agent Pipeline Architecture
         </p>
         <div style='display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;
                     align-items: center;'>
-            <span style='background: #2d3250; padding: 0.4rem 0.8rem; border-radius: 20px;
-                         color: #8b8fce; font-size: 0.85rem;'>
+            <span style='background: #F0F2F8; padding: 0.4rem 0.8rem; border-radius: 20px;
+                         color: #22B07D; font-size: 0.85rem;'>
                 📊 Analyze Data
             </span>
             <span style='color: #555;'>→</span>
-            <span style='background: #2d3250; padding: 0.4rem 0.8rem; border-radius: 20px;
-                         color: #8b8fce; font-size: 0.85rem;'>
+            <span style='background: #F0F2F8; padding: 0.4rem 0.8rem; border-radius: 20px;
+                         color: #22B07D; font-size: 0.85rem;'>
                 🔍 RAG Retrieval
             </span>
             <span style='color: #555;'>→</span>
-            <span style='background: #2d3250; padding: 0.4rem 0.8rem; border-radius: 20px;
-                         color: #8b8fce; font-size: 0.85rem;'>
+            <span style='background: #F0F2F8; padding: 0.4rem 0.8rem; border-radius: 20px;
+                         color: #22B07D; font-size: 0.85rem;'>
                 🧠 Identify Patterns
             </span>
             <span style='color: #555;'>→</span>
-            <span style='background: #2d3250; padding: 0.4rem 0.8rem; border-radius: 20px;
-                         color: #8b8fce; font-size: 0.85rem;'>
+            <span style='background: #F0F2F8; padding: 0.4rem 0.8rem; border-radius: 20px;
+                         color: #22B07D; font-size: 0.85rem;'>
                 ✨ Generate Plan
             </span>
         </div>
@@ -117,7 +117,7 @@ if "agent_result" in st.session_state:
 
         att_risk = meta.get("attendance_risk", "low")
         badge_col1.markdown(
-            f"<div style='text-align:center; background:#1a1d29; padding:0.5rem; "
+            f"<div style='text-align:center; background:#FFFFFF; padding:0.5rem; "
             f"border-radius:8px; border-left:3px solid {risk_colors.get(att_risk, '#666')};'>"
             f"<small style='color:#888;'>Attendance Risk</small><br>"
             f"<strong style='color:{risk_colors.get(att_risk, '#666')};'>{att_risk.upper()}</strong>"
@@ -127,7 +127,7 @@ if "agent_result" in st.session_state:
 
         trend_val = meta.get("trend", "stable")
         badge_col2.markdown(
-            f"<div style='text-align:center; background:#1a1d29; padding:0.5rem; "
+            f"<div style='text-align:center; background:#FFFFFF; padding:0.5rem; "
             f"border-radius:8px; border-left:3px solid {trend_colors.get(trend_val, '#666')};'>"
             f"<small style='color:#888;'>Performance</small><br>"
             f"<strong style='color:{trend_colors.get(trend_val, '#666')};'>{trend_val.upper()}</strong>"
@@ -136,7 +136,7 @@ if "agent_result" in st.session_state:
         )
 
         badge_col3.markdown(
-            f"<div style='text-align:center; background:#1a1d29; padding:0.5rem; "
+            f"<div style='text-align:center; background:#FFFFFF; padding:0.5rem; "
             f"border-radius:8px; border-left:3px solid #F44336;'>"
             f"<small style='color:#888;'>Risks Found</small><br>"
             f"<strong style='color:#F44336;'>{meta.get('risks_count', 0)}</strong>"
@@ -145,7 +145,7 @@ if "agent_result" in st.session_state:
         )
 
         badge_col4.markdown(
-            f"<div style='text-align:center; background:#1a1d29; padding:0.5rem; "
+            f"<div style='text-align:center; background:#FFFFFF; padding:0.5rem; "
             f"border-radius:8px; border-left:3px solid #FF9800;'>"
             f"<small style='color:#888;'>Weak Topics</small><br>"
             f"<strong style='color:#FF9800;'>{meta.get('weak_topics_count', 0)}</strong>"

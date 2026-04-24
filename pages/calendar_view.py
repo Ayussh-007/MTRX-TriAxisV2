@@ -31,13 +31,13 @@ today_status = is_holiday_today()
 if today_status["is_holiday"]:
     st.markdown(
         f"""
-        <div style='background: linear-gradient(135deg, #b71c1c, #880e4f);
+        <div style='background: linear-gradient(135deg, #FEE2E2, #FECACA);
                     border-radius: 10px; padding: 1rem 1.2rem;
-                    margin-bottom: 1rem; border: 1px solid #f44336;'>
-            <span style='font-size: 1.1rem; color: #ffcdd2;'>
+                    margin-bottom: 1rem; border: 1px solid #FCA5A5;'>
+            <span style='font-size: 1.1rem; color: #991B1B;'>
                 🎉 <strong>Today is {today_status['name']}!</strong>
             </span><br>
-            <span style='font-size: 0.85rem; color: #ef9a9a;'>
+            <span style='font-size: 0.85rem; color: #B91C1C;'>
                 Consider revision-focused or lighter activities if students are present.
             </span>
         </div>
@@ -47,10 +47,10 @@ if today_status["is_holiday"]:
 else:
     st.markdown(
         f"""
-        <div style='background: linear-gradient(135deg, #1a237e, #283593);
+        <div style='background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
                     border-radius: 10px; padding: 0.8rem 1.2rem;
-                    margin-bottom: 1rem; border: 1px solid #3949ab;'>
-            <span style='font-size: 0.95rem; color: #e8eaf6;'>
+                    margin-bottom: 1rem; border: 1px solid #93C5FD;'>
+            <span style='font-size: 0.95rem; color: #1A1D2E;'>
                 📆 <strong>{today.strftime('%A, %B %d, %Y')}</strong> — Regular teaching day
             </span>
         </div>
@@ -72,15 +72,15 @@ if upcoming:
             badge_color = "#FF9800"
         else:
             badge = f"📅 In {h['days_until']} day(s)"
-            badge_color = "#6C63FF"
+            badge_color = "#2AD699"
 
         st.markdown(
             f"""
-            <div style='background: #1a1d29; padding: 0.6rem 1rem; border-radius: 8px;
+            <div style='background: #FFFFFF; padding: 0.6rem 1rem; border-radius: 8px;
                         margin-bottom: 0.4rem; border-left: 4px solid {badge_color};
                         display: flex; justify-content: space-between; align-items: center;'>
                 <span>🗓️ <strong>{h['name']}</strong>
-                    <span style='color: #888; font-size: 0.85rem;'>
+                    <span style='color: #9CA3AF; font-size: 0.85rem;'>
                         — {h['day_of_week']}, {h['date']}
                     </span>
                 </span>
@@ -124,7 +124,7 @@ cal_html = """
 <tr>
 """
 for dh in day_headers:
-    weekend = "color: #F44336;" if dh in ["Sat", "Sun"] else "color: #6C63FF;"
+    weekend = "color: #F44336;" if dh in ["Sat", "Sun"] else "color: #2AD699;"
     cal_html += f"<th style='padding: 8px; text-align: center; {weekend} font-size: 0.85rem;'>{dh}</th>"
 cal_html += "</tr>"
 
@@ -140,13 +140,13 @@ for week in weeks:
             is_weekend = i >= 5  # Saturday or Sunday
 
             if is_today:
-                bg = "background: #6C63FF; color: white; border-radius: 50%; font-weight: bold;"
+                bg = "background: #2AD699; color: white; border-radius: 50%; font-weight: bold;"
             elif is_hol:
-                bg = "background: #b71c1c; color: #ffcdd2; border-radius: 6px;"
+                bg = "background: #FEE2E2; color: #B91C1C; border-radius: 6px;"
             elif is_weekend:
                 bg = "color: #F44336;"
             else:
-                bg = "color: #ccc;"
+                bg = "color: #4B5563;"
 
             cal_html += (
                 f"<td style='padding: 8px; text-align: center; {bg} font-size: 0.9rem;'>"
@@ -162,8 +162,8 @@ st.markdown(cal_html, unsafe_allow_html=True)
 st.markdown(
     """
     <div style='display: flex; gap: 1.5rem; justify-content: center;
-                font-size: 0.8rem; color: #888; margin-top: 0.5rem;'>
-        <span>🟣 Today</span>
+                font-size: 0.8rem; color: #9CA3AF; margin-top: 0.5rem;'>
+        <span>🟢 Today</span>
         <span>🔴 Holiday</span>
         <span style='color: #F44336;'>● Weekend</span>
     </div>
