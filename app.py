@@ -31,6 +31,7 @@ student_mgmt_page = st.Page("pages/student_view.py",   title="Student Manager", 
 quiz_page         = st.Page("pages/quiz.py",           title="Quiz Generator",    icon="📝")
 teacher_page      = st.Page("pages/teacher_dashboard.py", title="Teacher Dashboard", icon="👩‍🏫")
 calendar_page     = st.Page("pages/calendar_view.py",  title="Calendar & Planning", icon="📅")
+slide_page        = st.Page("pages/slide_maker.py",    title="Lesson Slide Maker", icon="🖥️")
 agent_page        = st.Page("pages/ai_agent.py",       title="AI Agent",          icon="🤖")
 login_page        = st.Page("pages/student_login.py",  title="Student Login",     icon="🔐")
 portal_page       = st.Page("pages/student_portal.py", title="Student Portal",    icon="🎒")
@@ -40,7 +41,7 @@ shared_page       = st.Page("pages/shared_content.py", title="Shared Content",  
 pg = st.navigation(
     {
         "🏠 Main":     [home_page],
-        "👩‍🏫 Teacher":  [pdf_page, student_mgmt_page, quiz_page, teacher_page, calendar_page],
+        "👩‍🏫 Teacher":  [pdf_page, student_mgmt_page, quiz_page, teacher_page, calendar_page, slide_page],
         "🤖 AI Tools": [agent_page],
         "🎒 Student":  [login_page, portal_page, shared_page],
     }

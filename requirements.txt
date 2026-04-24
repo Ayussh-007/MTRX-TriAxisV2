@@ -26,3 +26,6 @@ pandas>=2.2.0
 # --- Charts (for teacher dashboard) ---
 plotly>=5.22.0
 matplotlib>=3.8.0
+
+# --- PowerPoint Generation ---
+python-pptx>=1.0.0
