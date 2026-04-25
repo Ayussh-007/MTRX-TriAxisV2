@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import API from '../api/client';
 import toast from 'react-hot-toast';
-import ReactMarkdown from 'react-markdown';
 
 export default function QuizGenerator() {
   const [topics, setTopics] = useState([]);
@@ -15,6 +14,9 @@ export default function QuizGenerator() {
   const [result, setResult] = useState(null);
   const [generating, setGenerating] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [shareStudents, setShareStudents] = useState([]);
+  const [shareAll, setShareAll] = useState(true);
 
   useEffect(() => {
     API.get('/curriculum/topics').then(r => { setTopics(r.data.topics || []); if (r.data.topics?.length) setTopic(r.data.topics[0]); });
@@ -43,11 +45,28 @@ export default function QuizGenerator() {
     setEvaluating(false);
   };
 
+  const shareQuiz = async () => {
+    if (!quiz) return;
+    setSharing(true);
+    try {
+      const payload = { quiz_data: quiz, student_ids: shareAll ? [] : shareStudents.map(Number) };
+      const { data } = await API.post('/quiz/share', payload);
+      toast.success(`🎉 Quiz shared with ${data.assigned_to} students!`);
+    } catch { toast.error('Failed to share quiz'); }
+    setSharing(false);
+  };
+
+  const toggleShareStudent = (id) => {
+    setShareStudents(prev =>
+      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
+    );
+  };
+
   return (
     <div>
       <div className="page-header">
         <h2>📝 Quiz Generator</h2>
-        <p>Generate MCQ quizzes from your curriculum and evaluate student answers.</p>
+        <p>Generate MCQ quizzes, evaluate student answers, and share with the class.</p>
       </div>
 
       {/* Config */}
@@ -74,12 +93,53 @@ export default function QuizGenerator() {
       </div>
 
       {/* Quiz */}
-      {quiz && quiz.questions.length > 0 && (
+      {quiz && quiz.questions && quiz.questions.length > 0 && (
         <div className="section">
-          <h3 className="section-title">📝 {quiz.topic} — {quiz.questions.length} Questions</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h3 className="section-title" style={{ margin: 0 }}>📝 {quiz.topic} — {quiz.questions.length} Questions</h3>
+          </div>
 
+          {/* Share Panel */}
+          <div className="card" style={{ marginBottom: '1.5rem', borderLeft: '4px solid var(--info)', background: 'rgba(96,165,250,0.04)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <h4 style={{ marginBottom: '0.4rem', fontSize: '0.95rem' }}>📤 Share Quiz with Students</h4>
+                <p style={{ color: 'var(--text-light)', fontSize: '0.82rem', margin: 0 }}>
+                  Students will see this quiz in their portal and can submit answers.
+                </p>
+
+                <div style={{ marginTop: '0.6rem' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', cursor: 'pointer', marginBottom: '0.3rem' }}>
+                    <input type="radio" name="shareTarget" checked={shareAll} onChange={() => setShareAll(true)} style={{ accentColor: 'var(--primary)' }} />
+                    Share with <strong>all students</strong> ({students.length})
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', cursor: 'pointer' }}>
+                    <input type="radio" name="shareTarget" checked={!shareAll} onChange={() => setShareAll(false)} style={{ accentColor: 'var(--primary)' }} />
+                    Share with <strong>selected students</strong>
+                  </label>
+                </div>
+
+                {!shareAll && (
+                  <div style={{ marginTop: '0.5rem', maxHeight: 150, overflowY: 'auto', padding: '0.5rem', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }}>
+                    {students.map(s => (
+                      <label key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', padding: '2px 0', cursor: 'pointer' }}>
+                        <input type="checkbox" checked={shareStudents.includes(s.id)} onChange={() => toggleShareStudent(s.id)} style={{ accentColor: 'var(--primary)' }} />
+                        {s.name}
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <button className="btn btn-primary" onClick={shareQuiz} disabled={sharing || (!shareAll && shareStudents.length === 0)}>
+                {sharing ? '⏳ Sharing...' : '📤 Share Quiz'}
+              </button>
+            </div>
+          </div>
+
+          {/* Evaluate Form */}
           <div className="form-group" style={{ maxWidth: 300, marginBottom: '1rem' }}>
-            <label className="form-label">🎒 Select Student</label>
+            <label className="form-label">🎒 Answer as Student (Teacher Eval)</label>
             <select className="form-select" value={selectedStudent} onChange={e => setSelectedStudent(e.target.value)}>
               <option value="">-- Choose --</option>
               {students.map(s => <option key={s.id} value={s.id}>{s.name} (ID: {s.id})</option>)}
@@ -97,7 +157,7 @@ export default function QuizGenerator() {
                   <strong>{key}.</strong> {val}
                 </label>
               ))}
-              {result && result.results[qi] && (
+              {result && result.results && result.results[qi] && (
                 <div style={{ marginTop: '0.5rem', padding: '0.5rem', borderRadius: 8, background: result.results[qi].is_correct ? '#F0FDF4' : '#FEF2F2' }}>
                   {result.results[qi].is_correct ? '✅ Correct' : `❌ Wrong — Answer: ${result.results[qi].correct_answer}`}
                   {q.explanation && <div style={{ fontSize: '0.82rem', color: '#4B5563', marginTop: '0.3rem' }}>💡 {q.explanation}</div>}
@@ -107,7 +167,7 @@ export default function QuizGenerator() {
           ))}
 
           {!result && (
-            <button className="btn btn-primary btn-block" onClick={evaluate} disabled={evaluating}>
+            <button className="btn btn-primary btn-block" onClick={evaluate} disabled={evaluating || !selectedStudent}>
               {evaluating ? '⏳ Evaluating...' : '✅ Submit Answers'}
             </button>
           )}
