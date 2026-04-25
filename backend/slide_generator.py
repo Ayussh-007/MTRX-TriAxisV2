@@ -156,7 +156,7 @@ def generate_slide_content(
     include_quiz_slide: bool = False,
     teacher_name: str = "Teacher",
 ) -> list[dict]:
-    """RAG + LLM → rich slide content list."""
+    """RAG + LLM → rich slide content list with robust parsing."""
     if vectorstore_exists():
         vs   = load_vectorstore()
         docs = retrieve_context(topic, k=8, vectorstore=vs)
@@ -164,30 +164,76 @@ def generate_slide_content(
             f"[{d.metadata.get('title','Section')}]\n{d.page_content}" for d in docs
         )
     else:
-        ctx = f"No curriculum. Use comprehensive general knowledge about: {topic}"
+        ctx = f"No curriculum uploaded. Use your comprehensive knowledge about: {topic}. Generate detailed, accurate, curriculum-grade content."
 
     num_content = max(3, num_slides - 3)
     prompt = _build_prompt(topic, ctx, num_content, teaching_style, difficulty,
                            include_examples, include_key_terms, include_quiz_slide)
 
-    raw = get_llm(temperature=0.6).invoke(prompt).strip()
-    raw = re.sub(r"^```(?:json)?", "", raw, flags=re.IGNORECASE).strip()
-    raw = re.sub(r"```$", "", raw).strip()
+    # Try up to 2 attempts
+    for attempt in range(2):
+        try:
+            raw = get_llm(temperature=0.5).invoke(prompt).strip()
+            parsed = _parse_llm_json(raw)
+            if parsed and len(parsed) >= 3:
+                # Validate each slide has at minimum a 'type'
+                valid = []
+                for s in parsed:
+                    if isinstance(s, dict) and s.get("type"):
+                        valid.append(s)
+                if valid:
+                    return valid
+            print(f"[WARN] Attempt {attempt+1}: parsed {len(parsed) if parsed else 0} slides, retrying...")
+        except Exception as e:
+            print(f"[WARN] Attempt {attempt+1} failed: {e}")
 
+    print(f"[WARN] LLM failed for slides on '{topic}', using fallback")
+    return _fallback_slides(topic, teacher_name, num_content)
+
+
+def _parse_llm_json(raw: str) -> list | None:
+    """Parse LLM output to JSON array with multiple strategies."""
+    # Strip markdown fences
+    cleaned = re.sub(r"^```(?:json)?", "", raw, flags=re.IGNORECASE).strip()
+    cleaned = re.sub(r"```$", "", cleaned).strip()
+
+    # Strategy 1: Direct parse
     try:
-        return json.loads(raw)
+        result = json.loads(cleaned)
+        if isinstance(result, list):
+            return result
     except json.JSONDecodeError:
-        m = re.search(r"\[.*\]", raw, re.DOTALL)
-        if m:
-            try:
-                return json.loads(m.group(0))
-            except json.JSONDecodeError:
-                pass
-    return _fallback_slides(topic, teacher_name)
+        pass
+
+    # Strategy 2: Find JSON array
+    m = re.search(r"\[.*\]", cleaned, re.DOTALL)
+    if m:
+        try:
+            result = json.loads(m.group(0))
+            if isinstance(result, list):
+                return result
+        except json.JSONDecodeError:
+            pass
+
+    # Strategy 3: Fix common JSON issues (trailing commas, single quotes)
+    fixed = cleaned
+    fixed = re.sub(r",\s*([}\]])", r"\1", fixed)  # trailing commas
+    fixed = fixed.replace("'", '"')  # single to double quotes
+    m2 = re.search(r"\[.*\]", fixed, re.DOTALL)
+    if m2:
+        try:
+            result = json.loads(m2.group(0))
+            if isinstance(result, list):
+                return result
+        except json.JSONDecodeError:
+            pass
+
+    return None
 
 
-def _fallback_slides(topic, teacher_name):
-    return [
+def _fallback_slides(topic, teacher_name, num_content=4):
+    """Rich fallback slides when LLM parsing fails."""
+    slides = [
         {
             "type": "title", "title": topic,
             "subtitle": f"A comprehensive classroom lesson on {topic}",
@@ -200,16 +246,16 @@ def _fallback_slides(topic, teacher_name):
         {
             "type": "objectives", "title": "What You Will Learn Today",
             "bullets": [
-                f"Define {topic} using precise, curriculum-grounded scientific language.",
-                "Identify the main components of the system and describe each component's role.",
-                "Explain the underlying principles that govern the behaviour of the system.",
-                "Apply these principles to analyse practical, real-world scenarios and problems.",
-                "Evaluate different approaches and understand their trade-offs and limitations.",
+                f"Define {topic} using precise, curriculum-grounded scientific language and terminology.",
+                "Identify the main components of the system and describe each component's role clearly.",
+                "Explain the underlying principles that govern the behaviour and dynamics of the system.",
+                "Apply these principles to analyse practical, real-world scenarios and solve problems.",
+                "Evaluate different approaches, compare their trade-offs, and justify optimal solutions.",
             ],
             "explanation": (
                 f"These five objectives form a learning ladder — each one builds on the previous. "
                 f"We start with vocabulary, move to understanding, and finish with application. "
-                f"Use them as a checklist: if you can do all five by end of class, you're ready for the assessment."
+                f"Use them as a checklist: if you can do all five by end of class, you're ready for assessment."
             ),
             "speaker_notes": (
                 f"Good morning, everyone! Today's topic is {topic}. Before we dive in, look at these "
@@ -239,35 +285,117 @@ def _fallback_slides(topic, teacher_name):
                 f"Let's start at the very beginning. {topic} is not just an abstract idea — it has shaped "
                 f"human technology and science for decades. I want you to think of it as a lens: once you "
                 f"understand it, you'll start recognising it in everything around you. "
-                f"For example, [insert a local, relevant example here]. Can anyone spot another example "
-                f"from their own experience? Brilliant. Now let's look at how it's formally defined, "
-                f"because precision of language matters enormously in this field."
+                f"Can anyone spot an example from their own experience? Brilliant. Now let's look at "
+                f"how it's formally defined, because precision of language matters enormously in this field."
             ),
         },
         {
-            "type": "summary", "title": "Recap & Next Steps",
+            "type": "content", "title": f"Key Principles and Laws",
             "bullets": [
-                f"We established a precise definition of {topic} and its place within the broader field.",
-                "Core principles and underlying mechanisms were explored with worked examples for clarity.",
-                "Key terminology was introduced to build the academic vocabulary essential for assessments.",
-                "Real-world applications illustrated why mastering this topic has practical, immediate value.",
-                "Next class we extend these ideas — review today's notes and attempt the practice questions.",
+                f"The first principle states that {topic} operates under a framework of conservation and equilibrium.",
+                "Mathematical relationships are used to quantify interactions between different system variables.",
+                "Boundary conditions and constraints define the scope within which the principles are valid.",
+                "Experimental validation has confirmed these principles across thousands of independent studies worldwide.",
+                "When any principle is violated, it signals either a measurement error or a new discovery.",
             ],
             "explanation": (
-                f"Today's session laid the critical foundation. Without a solid grasp of these concepts, "
-                f"later topics will feel disconnected. Tonight, revisit your notes, highlight any gaps, "
-                f"and complete 3-5 practice questions. Bring any unresolved doubts to the next session."
+                f"Principles are not arbitrary rules — they are distilled from thousands of experiments. "
+                f"Each one tells you what WILL happen under specific conditions. "
+                f"As an engineer or scientist, your job is to identify which principle applies to the problem at hand, "
+                f"set up the correct equations, and solve for the unknown. Practice this workflow and it becomes intuitive."
             ),
             "speaker_notes": (
-                f"Excellent work today! Let's take 90 seconds to lock in what we covered. "
-                f"We defined {topic}, explored its core principles, saw real-world applications, "
-                f"and built up your vocabulary. For homework: read the relevant chapter, "
-                f"attempt the five end-of-chapter questions, and note anything you're unsure about. "
-                f"I'll start next class by answering your questions. Any questions right now? "
-                f"If not, great job — see you next time!"
+                f"This is the heart of {topic}. These principles are non-negotiable — nature follows them. "
+                f"I always tell students: memorise the principle, but more importantly, understand WHY it works. "
+                f"If you understand the 'why', you can derive everything else from scratch. "
+                f"Can anyone think of a situation where Principle 1 would apply? Excellent. "
+                f"Let's work through it together on the next slide."
+            ),
+        },
+        {
+            "type": "content", "title": f"Real-World Applications",
+            "bullets": [
+                f"{topic} is applied directly in modern engineering, medicine, computing, and environmental science.",
+                "Industries use these concepts daily to design systems, optimise processes, and predict failures.",
+                "Consumer technology from smartphones to electric vehicles relies on these exact principles.",
+                "Research institutions are pushing the boundaries by applying these ideas to quantum and nano-scale systems.",
+                "Students who master this topic gain a competitive advantage in internships, research, and interviews.",
+            ],
+            "explanation": (
+                f"Applications make abstract theory tangible. When you see {topic} used in a real product or system, "
+                f"the formulas stop being symbols on paper and become tools you can wield. "
+                f"Take 5 minutes after class to look up one application that interests you — deepening that connection "
+                f"will dramatically improve your recall during exams."
+            ),
+            "speaker_notes": (
+                f"Now let's see why this matters beyond the classroom. {topic} is everywhere — from the device "
+                f"in your pocket to the power grid that lights this room. I want you to feel that connection. "
+                f"Pick ONE application that genuinely excites you and dig into it. "
+                f"When you study for exams, that application will be your 'anchor', making everything else easier. "
+                f"Can anyone share an application they've already encountered? Let's hear it."
             ),
         },
     ]
+
+    # Add more content slides if needed
+    extra_titles = [
+        (f"Common Misconceptions About {topic}", "misconceptions"),
+        (f"Problem-Solving Strategies", "strategies"),
+        (f"Historical Development", "history"),
+        (f"Advanced Topics & Extensions", "advanced"),
+    ]
+    for i in range(num_content - 3):
+        if i >= len(extra_titles):
+            break
+        title, _ = extra_titles[i]
+        slides.append({
+            "type": "content", "title": title,
+            "bullets": [
+                f"Students commonly confuse this concept with closely related but fundamentally different ideas.",
+                f"A structured approach — identify, plan, execute, verify — produces correct results more reliably.",
+                f"Historical context shows how understanding of {topic} evolved through scientific revolutions.",
+                f"Extension problems challenge students to apply principles in novel, unfamiliar scenarios.",
+                f"Self-assessment questions help identify gaps before formal examinations and graded assignments.",
+            ],
+            "explanation": (
+                f"This section addresses areas where students typically struggle most. "
+                f"By explicitly naming common errors and providing counter-examples, we short-circuit bad habits "
+                f"before they take root. Pay special attention to the differences between superficially similar concepts."
+            ),
+            "speaker_notes": (
+                f"I've seen students make these mistakes year after year. Let's break the cycle today. "
+                f"Look at each misconception carefully — if you recognise yourself, that's actually a good sign! "
+                f"It means you're close to the right answer, you just need a small correction. "
+                f"Can anyone tell me which of these surprised them? Great discussion — let's move on."
+            ),
+        })
+
+    # Summary
+    slides.append({
+        "type": "summary", "title": "Recap & Next Steps",
+        "bullets": [
+            f"We established a precise definition of {topic} and its place within the broader field of study.",
+            "Core principles and underlying mechanisms were explored with worked examples for deeper clarity.",
+            "Key terminology was introduced to build the academic vocabulary essential for future assessments.",
+            "Real-world applications illustrated why mastering this topic has practical, immediate career value.",
+            "Next class we extend these ideas — review today's notes and attempt the practice questions tonight.",
+        ],
+        "explanation": (
+            f"Today's session laid the critical foundation. Without a solid grasp of these concepts, "
+            f"later topics will feel disconnected. Tonight, revisit your notes, highlight any gaps, "
+            f"and complete 3-5 practice questions. Bring any unresolved doubts to the next session."
+        ),
+        "speaker_notes": (
+            f"Excellent work today! Let's take 90 seconds to lock in what we covered. "
+            f"We defined {topic}, explored its core principles, saw real-world applications, "
+            f"and built up your vocabulary. For homework: read the relevant chapter, "
+            f"attempt the five end-of-chapter questions, and note anything you're unsure about. "
+            f"I'll start next class by answering your questions. Any questions right now? "
+            f"If not, great job — see you next time!"
+        ),
+    })
+
+    return slides
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
