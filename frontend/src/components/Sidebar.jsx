@@ -25,6 +25,13 @@ const NAV = [
 
 export default function Sidebar() {
   const [health, setHealth] = useState({ ollama: false, vectorstore: false, students_count: 0 });
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  // Apply theme to <html> on mount and whenever it changes
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     API.get('/system/health').then(r => setHealth(r.data)).catch(() => {});
@@ -33,6 +40,8 @@ export default function Sidebar() {
     }, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
   return (
     <aside className="sidebar">
@@ -64,6 +73,11 @@ export default function Sidebar() {
         ))}
       </nav>
 
+      {/* Theme Toggle */}
+      <button className="theme-toggle" onClick={toggleTheme}>
+        {theme === 'dark' ? '☀️' : '🌙'} {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+      </button>
+
       <hr className="sidebar-divider" />
       <div className="sidebar-status">
         <div className="status-dot">
@@ -80,7 +94,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div style={{ padding: '0.6rem 1.2rem', textAlign: 'center', color: '#4B5563', fontSize: '0.65rem', borderTop: '1px solid #1F2937' }}>
+      <div style={{ padding: '0.6rem 1.3rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.65rem', borderTop: '1px solid var(--border)' }}>
         MTRX-TriAxis v2.0 · Built with ❤️
       </div>
     </aside>

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API = axios.create({
   baseURL: '/api',
-  timeout: 120000, // 2 min for LLM calls
+  timeout: 300000, // 5 min for slow LLM calls (slides, agent)
 });
 
 export default API;

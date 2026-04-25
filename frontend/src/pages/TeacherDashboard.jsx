@@ -43,7 +43,7 @@ export default function TeacherDashboard() {
   const trendIcon = (t) => t === 'improving' ? '📈' : t === 'declining' ? '📉' : '➡️';
   const scoreBarColor = (val) => val >= 70 ? '#34D399' : val >= 50 ? '#FB923C' : '#F87171';
 
-  const chartTooltipStyle = { backgroundColor: '#151A28', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, color: '#E8ECF4' };
+  const chartTooltipStyle = { borderRadius: 10 };
 
   return (
     <div>

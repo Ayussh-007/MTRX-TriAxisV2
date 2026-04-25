@@ -54,96 +54,59 @@ H = 7.50    # inches
 def _build_prompt(topic, context, num_content, style, difficulty,
                   examples, key_terms, quiz_slide):
 
-    extras, example_note = [], ""
+    extras = []
     if key_terms:
-        extras.append("a key_terms slide with 6 terms, each with a 20+ word definition")
+        extras.append("a key_terms slide")
     if quiz_slide:
-        extras.append("a quiz slide: full-sentence question, 4 options, correct answer, 3-sentence explanation")
-    if examples:
-        example_note = "For each content slide include a vivid real-world example inside 'explanation'.\n"
-    extras_text = ("Also include: " + "; ".join(extras) + ".\n") if extras else ""
+        extras.append("a quiz slide")
+    extras_text = ("Also include: " + ", ".join(extras) + ".\n") if extras else ""
 
-    return f"""You are a {style.lower()} educator building a classroom PowerPoint for a teacher.
+    return f"""Generate a JSON array of classroom slides about "{topic}".
 
-Topic : {topic}
-Style : {style}   |   Difficulty : {difficulty}
-Content slides (NOT counting title / objectives / summary): {num_content}
+Style: {style} | Difficulty: {difficulty}
 
-Curriculum material:
+Reference material:
 ---
-{context}
+{context[:2000]}
 ---
 
-{extras_text}{example_note}
-════════════════════════════════════════════════════════════════
-STRICT CONTENT RULES — every slide must follow these exactly:
-════════════════════════════════════════════════════════════════
+{extras_text}
+RULES:
+- Return ONLY a raw JSON array. No markdown, no explanation.
+- Each content slide: {{"type":"content","title":"<short>","bullets":["<sentence>","<sentence>","<sentence>","<sentence>"],"explanation":"<2-3 sentence deeper context>"}}
+- Title slide: {{"type":"title","title":"{topic}","subtitle":"<short tagline>","overview":"<2 sentence overview>"}}
+- Objectives slide: {{"type":"objectives","title":"Learning Objectives","bullets":["<objective>","<objective>","<objective>","<objective>"],"explanation":"<brief>"}}
+- Summary slide: {{"type":"summary","title":"Key Takeaways","bullets":["<takeaway>","<takeaway>","<takeaway>","<takeaway>"],"explanation":"<brief>"}}
+{"- Key-terms slide: {" + '"type":"key_terms","title":"Key Terms","terms":[{"term":"<word>","definition":"<definition>"}]' + "} with 5 terms" if key_terms else ""}
+{"- Quiz slide: {" + '"type":"quiz","title":"Quick Check","question":"<question>","options":["A","B","C","D"],"answer":"A","explanation":"<why>"' + "}" if quiz_slide else ""}
 
-1. bullets  → list of EXACTLY 5 items.
-              Each bullet = a COMPLETE, INFORMATIVE sentence of 12-20 words.
-              No vague phrases like "Key concept" or "Important point".
-              Each must encode a concrete fact, definition, or cause-effect from the curriculum.
+Generate exactly: 1 title + 1 objectives + {num_content} content + {"1 key_terms + " if key_terms else ""}{"1 quiz + " if quiz_slide else ""}1 summary = {2 + num_content + (1 if key_terms else 0) + (1 if quiz_slide else 0) + 1} slides total.
 
-2. explanation → ONE paragraph of EXACTLY 60-80 words giving deeper context,
-                 a worked example, or a real-world connection.
-                 This appears as a panel on the slide — write it as the teacher's spoken elaboration.
+Each bullet must be a complete, informative sentence with a real fact about {topic}.
+Return the JSON array now:"""
 
-3. speaker_notes → ONE paragraph of 100-130 words written in first person.
-                   Include: an opening hook, 2-3 elaboration sentences, one
-                   student-engagement question ("Can anyone...?"), and a transition.
 
-4. title → max 8 words, title-case.
-
-════════════════════════════════════════════════════════════════
-JSON SCHEMA (return ONLY the raw array — no markdown, no prose)
-════════════════════════════════════════════════════════════════
-
-Content / objectives / summary slide:
-{{
-  "type": "content" | "objectives" | "summary",
-  "title": "<8-word max>",
-  "bullets": ["<12-20 word sentence>", "<12-20 word sentence>", ... x5],
-  "explanation": "<60-80 word paragraph>",
-  "speaker_notes": "<100-130 word script>"
-}}
-
-Title slide:
-{{
-  "type": "title",
-  "title": "<topic name>",
-  "subtitle": "<catchy 10-word descriptor>",
-  "overview": "<3-sentence lesson overview paragraph, ~50 words>"
-}}
-
-Key-terms slide:
-{{
-  "type": "key_terms",
-  "title": "Key Terms & Definitions",
-  "terms": [
-    {{"term": "<word>", "definition": "<20+ word definition sentence>"}},
-    ... x6
-  ]
-}}
-
-Quiz slide:
-{{
-  "type": "quiz",
-  "title": "Quick Check",
-  "question": "<full question sentence>",
-  "options": ["<A>", "<B>", "<C>", "<D>"],
-  "answer": "A"|"B"|"C"|"D",
-  "explanation": "<3-sentence explanation of why the answer is correct>",
-  "speaker_notes": "<50-word facilitation note>"
-}}
-
-SLIDE ORDER:
-1. title
-2. objectives   (5 bullets on what students will learn)
-3-{2+num_content}. content  (one distinct sub-topic each)
-{"next. key_terms" if key_terms else ""}
-{"next. quiz" if quiz_slide else ""}
-last.  summary   (5 takeaway bullets + next-steps explanation)
-"""
+def _call_ollama_with_timeout(prompt: str, timeout: int = 120) -> str:
+    """Call Ollama directly via HTTP with a hard timeout."""
+    import requests as _requests
+    import os
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    model = os.getenv("OLLAMA_MODEL", "mistral")
+    try:
+        resp = _requests.post(
+            f"{base_url}/api/generate",
+            json={"model": model, "prompt": prompt, "stream": False,
+                  "options": {"temperature": 0.5, "num_predict": 2048}},
+            timeout=timeout,
+        )
+        resp.raise_for_status()
+        return resp.json().get("response", "").strip()
+    except _requests.Timeout:
+        print(f"[WARN] Ollama timed out after {timeout}s")
+        return ""
+    except Exception as e:
+        print(f"[WARN] Ollama error: {e}")
+        return ""
 
 
 def generate_slide_content(
@@ -170,18 +133,19 @@ def generate_slide_content(
     prompt = _build_prompt(topic, ctx, num_content, teaching_style, difficulty,
                            include_examples, include_key_terms, include_quiz_slide)
 
-    # Try up to 2 attempts
+    # Try up to 2 attempts with 120s timeout each
     for attempt in range(2):
         try:
-            raw = get_llm(temperature=0.5).invoke(prompt).strip()
+            print(f"[SLIDE] Attempt {attempt+1}: calling Ollama (120s timeout)...")
+            raw = _call_ollama_with_timeout(prompt, timeout=120)
+            if not raw:
+                print(f"[WARN] Attempt {attempt+1}: empty response")
+                continue
             parsed = _parse_llm_json(raw)
             if parsed and len(parsed) >= 3:
-                # Validate each slide has at minimum a 'type'
-                valid = []
-                for s in parsed:
-                    if isinstance(s, dict) and s.get("type"):
-                        valid.append(s)
+                valid = [s for s in parsed if isinstance(s, dict) and s.get("type")]
                 if valid:
+                    print(f"[OK] Generated {len(valid)} slides from LLM")
                     return valid
             print(f"[WARN] Attempt {attempt+1}: parsed {len(parsed) if parsed else 0} slides, retrying...")
         except Exception as e:
