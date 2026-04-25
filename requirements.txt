@@ -12,7 +12,12 @@ faiss-cpu>=1.8.0
 # --- PDF Processing ---
 PyMuPDF>=1.24.0
 
-# --- Frontend ---
+# --- API Backend ---
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+
+# --- Frontend (legacy Streamlit) ---
 streamlit>=1.39.0
 
 # --- Text Processing ---
