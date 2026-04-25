@@ -1,7 +1,7 @@
 """
 MTRX-TriAxis | Student View Page
 Student profile, attendance intelligence, performance evolution,
-learning paths — with bulk-add and class-wide attendance grid.
+learning paths — with bulk-add and delete functionality.
 """
 
 import streamlit as st
@@ -10,8 +10,7 @@ from datetime import date
 from backend.student_model import (
     list_students, add_student, add_students_bulk, get_student,
     get_overall_score, get_attendance_rate, get_topic_scores,
-    get_weak_topics, get_strong_topics, record_attendance,
-    record_attendance_bulk, get_attendance_for_date,
+    get_weak_topics, get_strong_topics, delete_student,
     generate_learning_path,
 )
 from backend.attendance_intelligence import (
@@ -25,7 +24,7 @@ from backend.ui_components import page_header
 
 page_header(
     "🎒", "Student Manager",
-    "Add students, manage attendance, and track individual performance.",
+    "Add, remove, and track individual student performance.",
     accent="#22B07D",
 )
 
@@ -112,72 +111,43 @@ with add_tab_bulk:
 st.markdown("---")
 
 # ===================================================================
-# SECTION 2: CLASS-WIDE ATTENDANCE GRID
+# SECTION 2: ENROLLED STUDENTS (with delete)
 # ===================================================================
-st.markdown("### 📅 Class Attendance")
+st.markdown("### 👥 Enrolled Students")
 
 students = list_students()
 
 if not students:
-    st.info("No students registered yet. Add a student to get started.")
+    st.info("No students registered yet. Add a student above to get started.")
     st.stop()
 
-att_date = st.date_input("Select date:", value=date.today(), key="att_grid_date")
-date_str = att_date.isoformat()
-
-# Load existing attendance for this date
-existing = get_attendance_for_date(date_str)
-
-st.markdown(
-    f"""
-    <div style='background: rgba(124,111,255,0.06); border: 1px solid rgba(124,111,255,0.2);
-                border-radius: 10px; padding: 0.6rem 1rem; margin-bottom: 0.8rem;
-                font-size: 0.85rem; color: #22B07D;'>
-        ✅ Check the box = <strong>Present</strong> &nbsp;|&nbsp;
-        Unchecked = <strong>Absent</strong> &nbsp;|&nbsp;
-        Date: <strong>{att_date.strftime('%A, %d %B %Y')}</strong>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-# Render the grid
-att_states = {}
-num_cols = 3
-rows = [students[i:i + num_cols] for i in range(0, len(students), num_cols)]
-
-for row_students in rows:
-    cols = st.columns(num_cols)
-    for col, s in zip(cols, row_students):
-        with col:
-            default_present = existing.get(s["id"], True)  # Default to present if no record
-            att_states[s["id"]] = st.checkbox(
-                f"{s['name']}",
-                value=default_present,
-                key=f"att_{s['id']}_{date_str}",
-            )
-
-# Save button
-if st.button("💾 Save Attendance for All", type="primary", use_container_width=True):
-    records = [
-        {"student_id": sid, "date": date_str, "present": present}
-        for sid, present in att_states.items()
-    ]
-    record_attendance_bulk(records)
-
-    present_count = sum(1 for p in att_states.values() if p)
-    absent_count = len(att_states) - present_count
-    st.success(
-        f"✅ Attendance saved for {att_date.strftime('%d %b %Y')}: "
-        f"**{present_count}** present, **{absent_count}** absent"
-    )
+for s in students:
+    s_col1, s_col2 = st.columns([5, 1])
+    with s_col1:
+        login_badge = f"🔑 `{s.get('login_id', '')}`" if s.get('login_id') else "⚠️ No login ID"
+        st.markdown(
+            f"""
+            <div style='background:#FFFFFF; padding:0.6rem 1rem; border-radius:8px;
+                        margin-bottom:0.3rem; border-left:3px solid #22B07D;
+                        display:flex; justify-content:space-between; align-items:center;'>
+                <span style='font-weight:600; color:#1A1D2E;'>{s['name']}</span>
+                <span style='color:#9CA3AF; font-size:0.78rem;'>ID: {s['id']} · {login_badge}</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with s_col2:
+        if st.button("🗑️ Remove", key=f"del_sv_{s['id']}", help=f"Remove {s['name']}"):
+            delete_student(s['id'])
+            st.toast(f"🗑️ Removed {s['name']}")
+            st.rerun()
 
 st.markdown("---")
 
 # ===================================================================
 # SECTION 3: PER-STUDENT DASHBOARD
 # ===================================================================
-st.markdown("### 👥 Student Dashboard")
+st.markdown("### 📊 Student Dashboard")
 
 student_options = {f"{s['name']} (ID: {s['id']})": s["id"] for s in students}
 selected_label = st.selectbox("Choose a student:", options=list(student_options.keys()))

@@ -28,6 +28,7 @@ if "db_initialized" not in st.session_state:
 home_page         = st.Page("pages/home.py",           title="Home",             icon="🏠", default=True)
 pdf_page          = st.Page("pages/pdf_upload.py",     title="Upload Curriculum", icon="📄")
 student_mgmt_page = st.Page("pages/student_view.py",   title="Student Manager",   icon="🎒")
+attendance_page   = st.Page("pages/attendance.py",     title="Attendance",        icon="📋")
 quiz_page         = st.Page("pages/quiz.py",           title="Quiz Generator",    icon="📝")
 teacher_page      = st.Page("pages/teacher_dashboard.py", title="Teacher Dashboard", icon="👩‍🏫")
 calendar_page     = st.Page("pages/calendar_view.py",  title="Calendar & Planning", icon="📅")
@@ -41,7 +42,7 @@ shared_page       = st.Page("pages/shared_content.py", title="Shared Content",  
 pg = st.navigation(
     {
         "🏠 Main":     [home_page],
-        "👩‍🏫 Teacher":  [pdf_page, student_mgmt_page, quiz_page, teacher_page, calendar_page, slide_page],
+        "👩‍🏫 Teacher":  [pdf_page, student_mgmt_page, attendance_page, quiz_page, teacher_page, calendar_page, slide_page],
         "🤖 AI Tools": [agent_page],
         "🎒 Student":  [login_page, portal_page, shared_page],
     }

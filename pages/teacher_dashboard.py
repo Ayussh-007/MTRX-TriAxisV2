@@ -29,7 +29,7 @@ from backend.attendance_intelligence import get_frequently_absent_students
 from backend.class_weakness import get_top_weak_topics, generate_doubt_sheet
 from backend.weather_context import get_weather_summary, get_weather, is_bad_weather
 from backend.student_model import (
-    list_students, add_student, add_students_bulk, delete_student,
+    list_students, add_student, add_students_bulk,
     update_student_login_id, get_student,
 )
 from backend.content_sharing import (
@@ -590,7 +590,7 @@ with mgmt_col2:
 
     if all_students:
         for s in all_students:
-            s_col1, s_col2, s_col3 = st.columns([3, 2, 1])
+            s_col1, s_col2 = st.columns([3, 2])
 
             with s_col1:
                 login_badge = f"🔑 `{s.get('login_id', '')}`" if s.get('login_id') else "⚠️ No login ID"
@@ -611,11 +611,6 @@ with mgmt_col2:
                             st.rerun()
                         except Exception as e:
                             st.error(f"Error: {str(e)}")
-
-            with s_col3:
-                if st.button("🗑️", key=f"del_{s['id']}", help=f"Delete {s['name']}"):
-                    delete_student(s['id'])
-                    st.rerun()
     else:
         st.info("No students registered yet.")
 
