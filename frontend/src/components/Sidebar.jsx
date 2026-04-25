@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 const NAV = [
   { section: 'Main', items: [
-    { to: '/', icon: '🏠', label: 'Home' },
+    { to: '/home', icon: '🏠', label: 'Home' },
   ]},
   { section: 'Teacher', items: [
     { to: '/curriculum', icon: '📄', label: 'Upload Curriculum' },
@@ -64,7 +64,6 @@ export default function Sidebar() {
               <NavLink
                 key={item.to}
                 to={item.to}
-                end={item.to === '/'}
                 className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
               >
                 <span className="sidebar-link-icon">{item.icon}</span>
