@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
+import AuthPage from './pages/AuthPage';
 import Home from './pages/Home';
 import StudentManager from './pages/StudentManager';
 import Attendance from './pages/Attendance';
@@ -13,6 +15,18 @@ import StudentLogin from './pages/StudentLogin';
 import StudentPortal from './pages/StudentPortal';
 
 export default function App() {
+  const { isAuthenticated } = useAuth();
+
+  /* ── If not logged in, show the auth screen ── */
+  if (!isAuthenticated) {
+    return (
+      <>
+        <Toaster position="top-right" toastOptions={{ duration: 3000, style: { borderRadius: '12px', fontFamily: 'Inter', fontSize: '0.84rem', background: '#fff', color: '#1A1D2E', border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 8px 30px rgba(0,0,0,0.08)' } }} />
+        <AuthPage />
+      </>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Toaster position="top-right" toastOptions={{ duration: 3000, style: { borderRadius: '12px', fontFamily: 'Inter', fontSize: '0.84rem', background: 'var(--surface-solid)', color: 'var(--text)', border: '1px solid var(--glass-border)', boxShadow: 'var(--shadow-md)' } }} />

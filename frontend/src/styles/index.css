@@ -1,6 +1,6 @@
-/* ═══════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    MTRX-TriAxis | Glassmorphism Design System v2
-   ═══════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
@@ -56,7 +56,7 @@
   --transition-fast: all 0.15s ease;
 }
 
-/* ── Light Theme ──────────────────────────────────────────── */
+/* â”€â”€ Light Theme â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 [data-theme="light"] {
   --bg: #F4F6FA;
   --bg-secondary: #EDF0F7;
@@ -89,7 +89,7 @@
   --accent-glow: rgba(167, 139, 250, 0.15);
 }
 
-/* ── Reset ──────────────────────────────────────────────── */
+/* â”€â”€ Reset â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
@@ -157,7 +157,7 @@ body[data-theme="light"]::before {
 a { color: var(--primary-light); text-decoration: none; transition: var(--transition-fast); }
 a:hover { color: var(--primary); text-decoration: none; }
 
-/* ── Layout ─────────────────────────────────────────────── */
+/* â”€â”€ Layout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .app-layout {
   display: flex;
   min-height: 100vh;
@@ -165,7 +165,7 @@ a:hover { color: var(--primary); text-decoration: none; }
   z-index: 1;
 }
 
-/* ── Sidebar ───────────────────────────────────────────── */
+/* â”€â”€ Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .sidebar {
   width: 250px;
   background: var(--sidebar-bg);
@@ -307,7 +307,7 @@ a:hover { color: var(--primary); text-decoration: none; }
 .dot-red    { background: var(--danger); box-shadow: 0 0 8px rgba(248, 113, 113, 0.4); }
 .dot-yellow { background: var(--warning); box-shadow: 0 0 8px rgba(251, 191, 36, 0.4); }
 
-/* ── Main Content ───────────────────────────────────────── */
+/* â”€â”€ Main Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .main-content {
   flex: 1;
   margin-left: 250px;
@@ -316,7 +316,7 @@ a:hover { color: var(--primary); text-decoration: none; }
   position: relative;
 }
 
-/* ── Page Header ─────────────────────────────────────────── */
+/* â”€â”€ Page Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .page-header {
   margin-bottom: 1.8rem;
   padding-bottom: 1.2rem;
@@ -339,7 +339,7 @@ a:hover { color: var(--primary); text-decoration: none; }
   margin-top: 0.3rem;
 }
 
-/* ── Glass Cards ────────────────────────────────────────── */
+/* â”€â”€ Glass Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .card {
   background: var(--glass);
   backdrop-filter: blur(16px) saturate(1.3);
@@ -362,7 +362,7 @@ a:hover { color: var(--primary); text-decoration: none; }
   gap: 1rem;
 }
 
-/* ── Metric Cards ───────────────────────────────────────── */
+/* â”€â”€ Metric Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .metric-row {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -418,7 +418,7 @@ a:hover { color: var(--primary); text-decoration: none; }
 .delta-positive { color: var(--success); }
 .delta-negative { color: var(--danger); }
 
-/* ── Buttons ─────────────────────────────────────────────── */
+/* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -481,7 +481,7 @@ a:hover { color: var(--primary); text-decoration: none; }
   filter: none !important;
 }
 
-/* ── Forms ───────────────────────────────────────────────── */
+/* â”€â”€ Forms â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -555,7 +555,7 @@ input[type="checkbox"], input[type="radio"] {
   accent-color: var(--primary);
 }
 
-/* ── Table ───────────────────────────────────────────────── */
+/* â”€â”€ Table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .table-container {
   overflow-x: auto;
   border: 1px solid var(--glass-border);
@@ -594,7 +594,7 @@ input[type="checkbox"], input[type="radio"] {
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* ── Attendance Grid ──────────────────────────────────────── */
+/* â”€â”€ Attendance Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .att-cell {
   display: inline-flex;
   align-items: center;
@@ -605,36 +605,56 @@ input[type="checkbox"], input[type="radio"] {
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.18s cubic-bezier(.4,0,.2,1);
   border: 1px solid transparent;
   user-select: none;
+  position: relative;
 }
 
 .att-cell:hover:not(.att-weekend):not(.att-disabled) {
-  transform: scale(1.12);
+  transform: scale(1.18);
+  z-index: 2;
 }
 
-.att-present  { background: rgba(52, 211, 153, 0.12); color: var(--success); border-color: rgba(52, 211, 153, 0.25); }
-.att-absent   { background: rgba(248, 113, 113, 0.12); color: var(--danger); border-color: rgba(248, 113, 113, 0.25); }
+.att-cell:active:not(.att-weekend) {
+  transform: scale(0.92);
+}
+
+.att-present  {
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--success);
+  border-color: rgba(52, 211, 153, 0.3);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.12);
+}
+
+.att-absent   {
+  background: rgba(248, 113, 113, 0.15);
+  color: var(--danger);
+  border-color: rgba(248, 113, 113, 0.3);
+  box-shadow: 0 0 8px rgba(248, 113, 113, 0.1);
+}
+
 .att-weekend  { background: rgba(255, 255, 255, 0.02); color: var(--text-muted); cursor: default; }
-.att-empty    { background: rgba(255, 255, 255, 0.02); color: var(--text-muted); border-color: var(--border-light); }
+.att-empty    { background: rgba(255, 255, 255, 0.03); color: var(--text-muted); border-color: var(--border-light); }
+.att-empty:hover { border-color: var(--primary-border); background: rgba(34, 211, 153, 0.04); }
 
 .att-avatar {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary), var(--accent));
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(34, 211, 153, 0.2);
+  box-shadow: 0 2px 10px rgba(34, 211, 153, 0.25);
+  letter-spacing: 0.5px;
 }
 
-/* ── Badges ──────────────────────────────────────────────── */
+/* â”€â”€ Badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -652,7 +672,7 @@ input[type="checkbox"], input[type="radio"] {
 .badge-yellow { background: rgba(251, 191, 36, 0.1); color: var(--warning); border: 1px solid rgba(251, 191, 36, 0.2); }
 .badge-blue   { background: rgba(96, 165, 250, 0.1); color: var(--info); border: 1px solid rgba(96, 165, 250, 0.2); }
 
-/* ── Loading / Spinner ──────────────────────────────────── */
+/* â”€â”€ Loading / Spinner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .spinner {
   width: 32px;
   height: 32px;
@@ -676,7 +696,7 @@ input[type="checkbox"], input[type="radio"] {
   font-size: 0.9rem;
 }
 
-/* ── Alerts ──────────────────────────────────────────────── */
+/* â”€â”€ Alerts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .alert {
   padding: 0.8rem 1.1rem;
   border-radius: var(--radius-sm);
@@ -710,7 +730,7 @@ input[type="checkbox"], input[type="radio"] {
   color: var(--danger);
 }
 
-/* ── Progress Bar ─────────────────────────────────────────── */
+/* â”€â”€ Progress Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .progress-bar {
   height: 6px;
   background: rgba(255, 255, 255, 0.06);
@@ -725,7 +745,7 @@ input[type="checkbox"], input[type="radio"] {
   box-shadow: 0 0 8px rgba(34, 211, 153, 0.3);
 }
 
-/* ── Section ─────────────────────────────────────────────── */
+/* â”€â”€ Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .section {
   margin-bottom: 2rem;
 }
@@ -747,7 +767,7 @@ input[type="checkbox"], input[type="radio"] {
   margin: 1.5rem 0;
 }
 
-/* ── Markdown Content ─────────────────────────────────────── */
+/* â”€â”€ Markdown Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .markdown-content {
   line-height: 1.8;
   font-size: 0.9rem;
@@ -775,7 +795,7 @@ input[type="checkbox"], input[type="radio"] {
 
 .markdown-content strong { color: var(--text); }
 
-/* ── Tabs ──────────────────────────────────────────────────── */
+/* â”€â”€ Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .tabs {
   display: flex;
   gap: 0;
@@ -807,7 +827,7 @@ input[type="checkbox"], input[type="radio"] {
   text-shadow: 0 0 12px var(--primary-glow);
 }
 
-/* ── Hero (Home) ──────────────────────────────────────────── */
+/* â”€â”€ Hero (Home) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes gradientShift {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
@@ -901,7 +921,7 @@ input[type="checkbox"], input[type="radio"] {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* ── Feature Grid (Home) ──────────────────────────────────── */
+/* â”€â”€ Feature Grid (Home) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -944,13 +964,13 @@ input[type="checkbox"], input[type="radio"] {
 .feature-card .title { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); }
 .feature-card .desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
 
-/* ── Scrollbar ──────────────────────────────────────────── */
+/* â”€â”€ Scrollbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.14); }
 
-/* ── Recharts adjustments ─────────────────────────────────── */
+/* â”€â”€ Recharts adjustments â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .recharts-text { fill: var(--text-secondary) !important; }
 .recharts-cartesian-grid line { stroke: var(--border) !important; }
 .recharts-tooltip-wrapper .recharts-default-tooltip {
@@ -965,7 +985,7 @@ input[type="checkbox"], input[type="radio"] {
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); }
 [data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.18); }
 
-/* ── Responsive ──────────────────────────────────────────── */
+/* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 1200px) {
   .feature-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -984,4 +1004,471 @@ input[type="checkbox"], input[type="radio"] {
 
 @media (max-width: 480px) {
   .metric-row { grid-template-columns: 1fr; }
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   AUTH PAGE â€” Glassmorphism Card
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+/* â”€â”€ Background â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #e8f6f3;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: authBlobFloat 6s ease-in-out infinite;
+}
+
+.auth-bg-blob-1 {
+  width: 500px; height: 500px;
+  top: -120px; left: -80px;
+  transition: background 0.8s ease;
+}
+
+.auth-bg-blob-2 {
+  width: 400px; height: 400px;
+  bottom: -100px; right: -60px;
+  animation-delay: -4s;
+  transition: background 0.8s ease;
+}
+
+.auth-bg-blob-3 {
+  width: 300px; height: 300px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(167, 139, 250, 0.1);
+  animation-delay: -8s;
+}
+
+@keyframes authBlobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25%      { transform: translate(30px, -20px) scale(1.05); }
+  50%      { transform: translate(-20px, 15px) scale(0.95); }
+  75%      { transform: translate(15px, 25px) scale(1.02); }
+}
+
+/* â”€â”€ Card Container â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-card {
+  display: flex;
+  width: 100%;
+  max-width: 1020px;
+  min-height: 620px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 28px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* â”€â”€ Left Hero Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-card-hero {
+  width: 42%;
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px 0 0 28px;
+  transition: background 0.6s ease;
+}
+
+.auth-card-hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.auth-card-brand {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.8rem;
+}
+
+.auth-card-headline {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+}
+
+.auth-card-subtitle {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* Decorative shapes inside hero */
+.auth-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: authFloat 8s ease-in-out infinite;
+}
+
+.auth-shape-1 {
+  width: 180px; height: 180px;
+  top: -30px; right: -40px;
+  animation-delay: 0s;
+}
+
+.auth-shape-2 {
+  width: 100px; height: 100px;
+  top: 40%; left: -20px;
+  animation-delay: -3s;
+}
+
+.auth-shape-3 {
+  width: 130px; height: 130px;
+  bottom: -30px; right: 30%;
+  animation-delay: -6s;
+}
+
+@keyframes authFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%      { transform: translateY(-16px) rotate(2deg); }
+  50%      { transform: translateY(-6px) rotate(-2deg); }
+  75%      { transform: translateY(-20px) rotate(1deg); }
+}
+
+/* â”€â”€ Right Form Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-card-form {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 2.5rem;
+}
+
+.auth-card-form-inner {
+  width: 100%;
+  max-width: 380px;
+}
+
+.auth-form-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #1A1D2E;
+  margin-bottom: 0.2rem;
+  letter-spacing: -0.02em;
+}
+
+.auth-form-subtitle {
+  font-size: 0.82rem;
+  color: #9CA3AF;
+  margin-bottom: 1.4rem;
+  font-weight: 400;
+}
+
+/* â”€â”€ Role Selector Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-role-cards {
+  display: flex;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+
+.auth-role-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.8rem;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #94A3B8;
+}
+
+.auth-role-card:hover {
+  border-color: #CBD5E1;
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+}
+
+.auth-role-card.active {
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+  /* borderColor and background set via inline style */
+}
+
+/* â”€â”€ Google / social button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #374151;
+  font-size: 0.84rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-social-btn:hover {
+  border-color: #D1D5DB;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.auth-social-btn:active {
+  transform: scale(0.98);
+}
+
+/* â”€â”€ Divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #E5E7EB;
+}
+
+.auth-divider span {
+  padding: 0 0.8rem;
+  font-size: 0.68rem;
+  color: #9CA3AF;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* â”€â”€ Form Fields â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.auth-fg {}
+
+.auth-label {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #4B5563;
+  margin-bottom: 0.3rem;
+}
+
+.auth-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  background: rgba(245, 248, 250, 0.8);
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.auth-input-wrap:focus-within {
+  border-color: var(--auth-focus, #3aafa9);
+  background: #fff;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--auth-focus, #3aafa9) 12%, transparent);
+}
+
+.auth-input-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.auth-input-wrap input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: #1A1D2E;
+  background: transparent;
+}
+
+.auth-input-wrap input::placeholder {
+  color: #B0B7C3;
+  font-weight: 400;
+}
+
+.auth-pw-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.auth-pw-toggle:hover {
+  color: #6B7280;
+}
+
+/* â”€â”€ Error â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-error {
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #DC2626;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+/* â”€â”€ Submit Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-submit-btn {
+  margin-top: 0.4rem;
+  width: 100%;
+  padding: 0.72rem 1rem;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.auth-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px var(--auth-glow, rgba(58, 175, 169, 0.3));
+  filter: brightness(1.06);
+}
+
+.auth-submit-btn:active {
+  transform: translateY(0);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Spinner */
+.auth-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* â”€â”€ Toggle login / signup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.auth-toggle {
+  margin-top: 1.3rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #9CA3AF;
+}
+
+.auth-toggle button {
+  background: none;
+  border: none;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.auth-toggle button:hover {
+  text-decoration: underline;
+}
+
+/* â”€â”€ Auth Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+@media (max-width: 860px) {
+  .auth-card {
+    flex-direction: column;
+    max-width: 480px;
+    min-height: auto;
+  }
+  .auth-card-hero {
+    width: 100%;
+    min-height: 220px;
+    border-radius: 28px 28px 0 0;
+    align-items: center;
+    padding: 2rem;
+  }
+  .auth-card-headline {
+    font-size: 1.6rem;
+  }
+  .auth-card-form {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-bg {
+    padding: 0.8rem;
+  }
+  .auth-card {
+    border-radius: 20px;
+  }
+  .auth-card-hero {
+    border-radius: 20px 20px 0 0;
+    min-height: 180px;
+    padding: 1.5rem;
+  }
+  .auth-card-headline {
+    font-size: 1.4rem;
+  }
+  .auth-role-cards {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }

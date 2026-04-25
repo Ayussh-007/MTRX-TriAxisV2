@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import API from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
 const NAV = [
   { section: 'Main', items: [
@@ -24,6 +25,7 @@ const NAV = [
 ];
 
 export default function Sidebar() {
+  const { user, logout } = useAuth();
   const [health, setHealth] = useState({ ollama: false, vectorstore: false, students_count: 0 });
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
 
@@ -97,6 +99,39 @@ export default function Sidebar() {
       <div style={{ padding: '0.6rem 1.3rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.65rem', borderTop: '1px solid var(--border)' }}>
         MTRX-TriAxis v2.0 · Built with ❤️
       </div>
+
+      {/* Logged-in user & logout */}
+      {user && (
+        <div style={{ padding: '0.6rem 1.3rem', borderTop: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
+            {user.picture ? (
+              <img src={user.picture} alt="" style={{ width: 26, height: 26, borderRadius: '50%', objectFit: 'cover' }} />
+            ) : (
+              <div style={{
+                width: 26, height: 26, borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--primary), var(--accent))',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontSize: '0.65rem', fontWeight: 700, flexShrink: 0
+              }}>{user.name?.[0]?.toUpperCase()}</div>
+            )}
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</div>
+              <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>{user.role}</div>
+            </div>
+          </div>
+          <button
+            onClick={logout}
+            style={{
+              width: '100%', padding: '0.35rem 0.6rem', borderRadius: 'var(--radius-sm)',
+              background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)',
+              color: 'var(--danger)', fontSize: '0.72rem', fontWeight: 600,
+              cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(248,113,113,0.15)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(248,113,113,0.08)'; }}
+          >🚪 Sign Out</button>
+        </div>
+      )}
     </aside>
   );
 }
