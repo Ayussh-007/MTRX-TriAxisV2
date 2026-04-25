@@ -1,42 +1,21 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import API from '../api/client';
 import { useAuth } from '../context/AuthContext';
-
-/* ── Role-based navigation ── */
-const TEACHER_NAV = [
-  { section: 'Main', items: [
-    { to: '/home', icon: '🏠', label: 'Home' },
-  ]},
-  { section: 'Classroom', items: [
-    { to: '/classrooms', icon: '🏫', label: 'My Classrooms' },
-    { to: '/students', icon: '🎒', label: 'Student Manager' },
-    { to: '/attendance', icon: '📋', label: 'Attendance' },
-  ]},
-  { section: 'Teaching', items: [
-    { to: '/curriculum', icon: '📄', label: 'Upload Curriculum' },
-    { to: '/quiz', icon: '📝', label: 'Quiz Generator' },
-    { to: '/slides', icon: '🖥️', label: 'Slide Maker' },
-    { to: '/dashboard', icon: '👩‍🏫', label: 'Analytics' },
-  ]},
-  { section: 'AI Tools', items: [
-    { to: '/agent', icon: '🤖', label: 'AI Agent' },
-  ]},
-];
-
-const STUDENT_NAV = [
-  { section: 'Main', items: [
-    { to: '/portal', icon: '🏠', label: 'My Portal' },
-  ]},
-];
+import { useClassroom } from '../context/ClassroomContext';
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const { classroom, clearClassroom } = useClassroom();
   const navigate = useNavigate();
+  const location = useLocation();
   const [health, setHealth] = useState({ ollama: false, vectorstore: false, students_count: 0 });
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
 
-  const NAV = user?.role === 'teacher' ? TEACHER_NAV : STUDENT_NAV;
+  // Extract classroomId from URL path (e.g., /classroom/5/quiz → 5)
+  const pathMatch = location.pathname.match(/^\/classroom\/(\d+)/);
+  const classroomId = pathMatch ? pathMatch[1] : null;
+  const isInClassroom = !!classroomId;
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -54,9 +33,56 @@ export default function Sidebar() {
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
   const handleLogout = () => {
+    clearClassroom();
     logout();
     navigate('/');
   };
+
+  const handleBackToClassrooms = () => {
+    clearClassroom();
+    navigate(user?.role === 'teacher' ? '/home' : '/portal');
+  };
+
+  // ── Teacher nav: classroom-scoped ──
+  const TEACHER_CLASSROOM_NAV = classroomId ? [
+    { section: 'Classroom', items: [
+      { to: `/classroom/${classroomId}`, icon: '📊', label: 'Dashboard', end: true },
+      { to: `/classroom/${classroomId}/students`, icon: '🎒', label: 'Students' },
+      { to: `/classroom/${classroomId}/attendance`, icon: '📋', label: 'Attendance' },
+    ]},
+    { section: 'Teaching', items: [
+      { to: `/classroom/${classroomId}/curriculum`, icon: '📄', label: 'Curriculum' },
+      { to: `/classroom/${classroomId}/quiz`, icon: '📝', label: 'Quiz Generator' },
+      { to: `/classroom/${classroomId}/slides`, icon: '🖥️', label: 'Slide Maker' },
+      { to: `/classroom/${classroomId}/analytics`, icon: '📈', label: 'Analytics' },
+    ]},
+    { section: 'AI Tools', items: [
+      { to: `/classroom/${classroomId}/agent`, icon: '🤖', label: 'AI Agent' },
+    ]},
+  ] : [];
+
+  const TEACHER_HOME_NAV = [
+    { section: 'Main', items: [
+      { to: '/home', icon: '🏠', label: 'My Classrooms' },
+      { to: '/classrooms', icon: '⚙️', label: 'Manage Classrooms' },
+    ]},
+  ];
+
+  const STUDENT_HOME_NAV = [
+    { section: 'Main', items: [
+      { to: '/portal', icon: '🏠', label: 'My Classrooms' },
+    ]},
+  ];
+
+  const STUDENT_CLASSROOM_NAV = classroomId ? [
+    { section: 'Classroom', items: [
+      { to: `/classroom/${classroomId}/student`, icon: '📊', label: 'Dashboard', end: true },
+    ]},
+  ] : [];
+
+  const NAV = user?.role === 'teacher'
+    ? (isInClassroom ? TEACHER_CLASSROOM_NAV : TEACHER_HOME_NAV)
+    : (isInClassroom ? STUDENT_CLASSROOM_NAV : STUDENT_HOME_NAV);
 
   return (
     <aside className="sidebar">
@@ -69,6 +95,44 @@ export default function Sidebar() {
       </div>
       <hr className="sidebar-divider" />
 
+      {/* Back to classrooms button when inside a classroom */}
+      {isInClassroom && (
+        <button
+          onClick={handleBackToClassrooms}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '0.5rem',
+            padding: '0.5rem 1.1rem', margin: '0 0.6rem 0.3rem',
+            background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.15)',
+            borderRadius: 'var(--radius-sm)', color: 'var(--primary-light)',
+            fontSize: '0.76rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+            transition: 'all 0.2s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.15)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.08)'; }}
+        >
+          ← All Classrooms
+        </button>
+      )}
+
+      {/* Classroom name badge when inside a classroom */}
+      {isInClassroom && classroom && (
+        <div style={{
+          margin: '0 0.8rem 0.5rem', padding: '0.5rem 0.7rem',
+          background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(34,211,153,0.08))',
+          border: '1px solid rgba(99,102,241,0.18)', borderRadius: 'var(--radius-sm)',
+        }}>
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Active Classroom
+          </div>
+          <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text)', marginTop: '0.1rem' }}>
+            {classroom.name}
+          </div>
+          {classroom.subject && (
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{classroom.subject}</div>
+          )}
+        </div>
+      )}
+
       <nav className="sidebar-nav">
         {NAV.map(group => (
           <div key={group.section}>
@@ -77,6 +141,7 @@ export default function Sidebar() {
               <NavLink
                 key={item.to}
                 to={item.to}
+                end={item.end}
                 className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
               >
                 <span className="sidebar-link-icon">{item.icon}</span>

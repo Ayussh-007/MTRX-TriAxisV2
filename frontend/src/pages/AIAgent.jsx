@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import API from '../api/client';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
 export default function AIAgent() {
+  const { classroomId } = useParams();
   const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    API.get('/students').then(r => setStudents(r.data));
+    const ep = classroomId ? `/classrooms/${classroomId}/students` : '/students';
+    API.get(ep).then(r => setStudents(r.data.students || r.data));
   }, []);
 
   const run = async () => {

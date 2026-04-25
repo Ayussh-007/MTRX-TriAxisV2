@@ -1,70 +1,148 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useClassroom } from '../context/ClassroomContext';
 import API from '../api/client';
 
-const FEATURES = [
-  { icon: '📄', title: 'Smart PDF Processing', color: '#34D399', desc: 'Upload curriculum PDFs — AI extracts, cleans and chunks content into study-ready units.' },
-  { icon: '🧠', title: 'RAG-Powered Q&A', color: '#22B07D', desc: 'Ask any doubt and get curriculum-grounded answers via Retrieval Augmented Generation.' },
-  { icon: '📝', title: 'Auto Quiz Generator', color: '#60A5FA', desc: 'Generate MCQ quizzes from any topic. Scores tracked automatically per student.' },
-  { icon: '🎯', title: 'Personalised Paths', color: '#FBBF24', desc: 'AI analyses weak spots to build a custom step-by-step study plan per student.' },
-  { icon: '👩‍🏫', title: 'Teacher Insights', color: '#FB923C', desc: 'Class analytics, weak topic detection, and AI teaching suggestions in one dashboard.' },
-  { icon: '🌤️', title: 'Weather-Aware', color: '#38BDF8', desc: 'Real-time weather integration adjusts lesson recommendations automatically.' },
-  { icon: '🤖', title: 'Multi-Step AI Agent', color: '#A78BFA', desc: 'Chain-of-thought reasoning agent that plans, researches, and synthesises insights.' },
-  { icon: '📅', title: 'Smart Calendar', color: '#34D399', desc: 'Holiday awareness with AI-powered planning suggestions.' },
-];
+const COLORS = ['#6366F1', '#34D399', '#FB923C', '#60A5FA', '#F472B6', '#FBBF24', '#A78BFA', '#38BDF8'];
 
 export default function Home() {
+  const { user } = useAuth();
+  const { setClassroom } = useClassroom();
+  const navigate = useNavigate();
+  const [classrooms, setClassrooms] = useState([]);
   const [health, setHealth] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!user) return;
+    setLoading(true);
+    API.get(`/classrooms?teacher_id=${user.id}`)
+      .then(r => setClassrooms(r.data.classrooms || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
     API.get('/system/health').then(r => setHealth(r.data)).catch(() => {});
-  }, []);
+  }, [user]);
 
-  const statusCard = (label, ok, okText, failText) => {
-    const color = ok ? '#34D399' : '#FBBF24';
-    return (
-      <div style={{ flex: 1, minWidth: 160, background: `${color}08`, border: `1px solid ${color}20`, borderRadius: 14, padding: '0.8rem 1rem', backdropFilter: 'blur(10px)' }}>
-        <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px' }}>{label}</div>
-        <div style={{ color, fontWeight: 700, fontSize: '0.88rem', marginTop: 3 }}>
-          {ok ? '✅' : '⚠️'} {ok ? okText : failText}
-        </div>
-      </div>
-    );
+  const openClassroom = (room) => {
+    setClassroom(room);
+    navigate(`/classroom/${room.id}`);
   };
 
   return (
     <div>
       {/* Hero */}
-      <div className="hero">
-        <div className="hero-icon">🎓</div>
-        <h1>MTRX-TriAxis</h1>
-        <p>AI-Powered Classroom Assistant — smarter teaching, personalised learning.</p>
-        <div className="hero-badges">
-          {['🧠 LLM-Powered', '📚 RAG Curriculum', '📊 Real-time Analytics', '🌤️ Weather-Aware', '🤖 Multi-Step Agent'].map(b => (
-            <span key={b} className="hero-badge">{b}</span>
+      <div style={{
+        padding: '2rem', borderRadius: 'var(--radius-lg)',
+        background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(34,211,153,0.06))',
+        border: '1px solid rgba(99,102,241,0.12)',
+        marginBottom: '1.5rem',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.5rem' }}>
+          <span style={{ fontSize: '2rem' }}>🎓</span>
+          <div>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>
+              Welcome, {user?.name?.split(' ')[0]}!
+            </h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>
+              Select a classroom to manage, or create a new one.
+            </p>
+          </div>
+        </div>
+
+        {/* Status badges */}
+        {health && (
+          <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginTop: '0.8rem' }}>
+            {[
+              { ok: health.ollama, text: health.ollama ? 'Ollama Online' : 'Ollama Offline', color: health.ollama ? '#34D399' : '#F87171' },
+              { ok: true, text: `${classrooms.length} Classroom${classrooms.length !== 1 ? 's' : ''}`, color: '#6366F1' },
+            ].map((b, i) => (
+              <span key={i} style={{
+                padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.7rem', fontWeight: 600,
+                background: `${b.color}12`, color: b.color, border: `1px solid ${b.color}25`,
+              }}>{b.ok ? '●' : '○'} {b.text}</span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Classrooms Grid */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
+          🏫 My Classrooms
+        </h2>
+        <button className="btn btn-primary btn-sm" onClick={() => navigate('/classrooms')}>
+          + Create Classroom
+        </button>
+      </div>
+
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Loading...</div>
+      ) : classrooms.length === 0 ? (
+        <div style={{
+          textAlign: 'center', padding: '3rem', borderRadius: 'var(--radius-lg)',
+          background: 'var(--glass)', border: '1px solid var(--glass-border)',
+        }}>
+          <div style={{ fontSize: '3rem', marginBottom: '0.8rem' }}>🏫</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+            You haven't created any classrooms yet.
+          </div>
+          <button className="btn btn-primary" onClick={() => navigate('/classrooms')}>
+            Create Your First Classroom
+          </button>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+          {classrooms.map((room, i) => (
+            <div
+              key={room.id}
+              onClick={() => openClassroom(room)}
+              style={{
+                padding: '1.3rem', borderRadius: 'var(--radius-lg)',
+                background: 'var(--glass)', backdropFilter: 'blur(12px)',
+                border: '1px solid var(--glass-border)',
+                cursor: 'pointer', transition: 'all 0.25s ease',
+                position: 'relative', overflow: 'hidden',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = `0 12px 32px ${COLORS[i % COLORS.length]}15`; e.currentTarget.style.borderColor = `${COLORS[i % COLORS.length]}40`; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; e.currentTarget.style.borderColor = ''; }}
+            >
+              {/* Top accent */}
+              <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+                background: `linear-gradient(90deg, ${COLORS[i % COLORS.length]}, ${COLORS[(i + 2) % COLORS.length]})`,
+              }} />
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text)' }}>{room.name}</div>
+                  {room.subject && (
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.1rem' }}>{room.subject}</div>
+                  )}
+                </div>
+                <span style={{
+                  padding: '0.15rem 0.5rem', borderRadius: '999px', fontSize: '0.68rem', fontWeight: 700,
+                  background: 'rgba(34,211,153,0.1)', color: '#34D399', border: '1px solid rgba(34,211,153,0.2)',
+                  fontFamily: 'monospace', letterSpacing: '1px',
+                }}>{room.code}</span>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.8rem' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  <strong style={{ color: 'var(--text)', fontSize: '1rem' }}>{room.member_count}</strong> students
+                </div>
+              </div>
+
+              <div style={{
+                marginTop: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.3rem',
+                fontSize: '0.72rem', color: COLORS[i % COLORS.length], fontWeight: 600,
+              }}>
+                Open Dashboard →
+              </div>
+            </div>
           ))}
         </div>
-      </div>
-
-      {/* Status */}
-      {health && (
-        <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
-          {statusCard('LLM Engine', health.ollama, 'Ollama Online', 'Ollama Offline')}
-          {statusCard('Curriculum', health.vectorstore, 'Content Ready', 'Not Uploaded')}
-          {statusCard('Roster', health.students_count > 0, `${health.students_count} Students`, '0 Students')}
-        </div>
       )}
-
-      {/* Features */}
-      <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--text)' }}>✨ Platform Features</h2>
-      <div className="feature-grid">
-        {FEATURES.map(f => (
-          <div key={f.title} className="feature-card">
-            <div className="icon">{f.icon}</div>
-            <div className="title" style={{ color: f.color }}>{f.title}</div>
-            <div className="desc">{f.desc}</div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

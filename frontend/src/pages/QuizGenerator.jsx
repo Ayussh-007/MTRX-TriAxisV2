@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import API from '../api/client';
 import toast from 'react-hot-toast';
 
 export default function QuizGenerator() {
+  const { classroomId } = useParams();
   const [topics, setTopics] = useState([]);
   const [topic, setTopic] = useState('');
   const [customTopic, setCustomTopic] = useState('');
@@ -22,8 +24,10 @@ export default function QuizGenerator() {
 
   useEffect(() => {
     API.get('/curriculum/topics').then(r => { setTopics(r.data.topics || []); if (r.data.topics?.length) setTopic(r.data.topics[0]); }).catch(() => {});
-    API.get('/students').then(r => setStudents(r.data)).catch(() => {});
-  }, []);
+    // Fetch students from classroom if scoped, otherwise global
+    const studentsEndpoint = classroomId ? `/classrooms/${classroomId}/students` : '/students';
+    API.get(studentsEndpoint).then(r => setStudents(r.data.students || r.data)).catch(() => {});
+  }, [classroomId]);
 
   const generate = async () => {
     const finalTopic = customTopic.trim() || topic;

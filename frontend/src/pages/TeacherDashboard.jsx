@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import API from '../api/client';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 export default function TeacherDashboard() {
+  const { classroomId } = useParams();
   const [perf, setPerf] = useState(null);
   const [risk, setRisk] = useState([]);
   const [weather, setWeather] = useState(null);

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import API from '../api/client';
 import toast from 'react-hot-toast';
 
 export default function StudentManager() {
+  const { classroomId } = useParams();
   const [students, setStudents] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,9 +15,12 @@ export default function StudentManager() {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchStudents = () => API.get('/students').then(r => setStudents(r.data));
+  const fetchStudents = () => {
+    const endpoint = classroomId ? `/classrooms/${classroomId}/students` : '/students';
+    API.get(endpoint).then(r => setStudents(r.data.students || r.data)).catch(() => {});
+  };
 
-  useEffect(() => { fetchStudents(); }, []);
+  useEffect(() => { fetchStudents(); }, [classroomId]);
 
   const addStudent = async (e) => {
     e.preventDefault();

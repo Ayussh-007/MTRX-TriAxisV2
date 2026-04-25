@@ -6,6 +6,8 @@ import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import Home from './pages/Home';
 import ClassroomManager from './pages/ClassroomManager';
+import ClassroomDashboard from './pages/ClassroomDashboard';
+import ClassroomStudentView from './pages/ClassroomStudentView';
 import StudentManager from './pages/StudentManager';
 import Attendance from './pages/Attendance';
 import QuizGenerator from './pages/QuizGenerator';
@@ -28,7 +30,6 @@ function AppLayout() {
   const { user } = useAuth();
   const standaloneRoutes = ['/', '/auth'];
 
-  // Landing & Auth pages: full-screen, no sidebar
   if (standaloneRoutes.includes(location.pathname)) {
     return (
       <Routes>
@@ -38,25 +39,28 @@ function AppLayout() {
     );
   }
 
-  // All other pages: sidebar layout, require auth
   return (
     <div className="app-layout">
       <Sidebar />
       <main className="main-content">
         <Routes>
-          {/* ── Teacher Routes ── */}
+          {/* ── Teacher: Classroom list ── */}
           <Route path="/home" element={<RequireAuth roles={['teacher']}><Home /></RequireAuth>} />
           <Route path="/classrooms" element={<RequireAuth roles={['teacher']}><ClassroomManager /></RequireAuth>} />
-          <Route path="/students" element={<RequireAuth roles={['teacher']}><StudentManager /></RequireAuth>} />
-          <Route path="/attendance" element={<RequireAuth roles={['teacher']}><Attendance /></RequireAuth>} />
-          <Route path="/quiz" element={<RequireAuth roles={['teacher']}><QuizGenerator /></RequireAuth>} />
-          <Route path="/dashboard" element={<RequireAuth roles={['teacher']}><TeacherDashboard /></RequireAuth>} />
-          <Route path="/curriculum" element={<RequireAuth roles={['teacher']}><CurriculumUpload /></RequireAuth>} />
-          <Route path="/slides" element={<RequireAuth roles={['teacher']}><SlideMaker /></RequireAuth>} />
-          <Route path="/agent" element={<RequireAuth roles={['teacher']}><AIAgent /></RequireAuth>} />
 
-          {/* ── Student Routes ── */}
+          {/* ── Classroom-scoped (teacher) ── */}
+          <Route path="/classroom/:classroomId" element={<RequireAuth roles={['teacher']}><ClassroomDashboard /></RequireAuth>} />
+          <Route path="/classroom/:classroomId/curriculum" element={<RequireAuth roles={['teacher']}><CurriculumUpload /></RequireAuth>} />
+          <Route path="/classroom/:classroomId/quiz" element={<RequireAuth roles={['teacher']}><QuizGenerator /></RequireAuth>} />
+          <Route path="/classroom/:classroomId/attendance" element={<RequireAuth roles={['teacher']}><Attendance /></RequireAuth>} />
+          <Route path="/classroom/:classroomId/slides" element={<RequireAuth roles={['teacher']}><SlideMaker /></RequireAuth>} />
+          <Route path="/classroom/:classroomId/agent" element={<RequireAuth roles={['teacher']}><AIAgent /></RequireAuth>} />
+          <Route path="/classroom/:classroomId/analytics" element={<RequireAuth roles={['teacher']}><TeacherDashboard /></RequireAuth>} />
+          <Route path="/classroom/:classroomId/students" element={<RequireAuth roles={['teacher']}><StudentManager /></RequireAuth>} />
+
+          {/* ── Student ── */}
           <Route path="/portal" element={<RequireAuth roles={['student']}><StudentPortal /></RequireAuth>} />
+          <Route path="/classroom/:classroomId/student" element={<RequireAuth roles={['student']}><ClassroomStudentView /></RequireAuth>} />
 
           {/* ── Fallback ── */}
           <Route path="*" element={<Navigate to={user?.role === 'teacher' ? '/home' : user ? '/portal' : '/auth'} replace />} />

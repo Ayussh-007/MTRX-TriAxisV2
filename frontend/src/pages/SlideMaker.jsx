@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import API from '../api/client';
 import toast from 'react-hot-toast';
 
@@ -6,6 +7,7 @@ const SLIDE_ICONS = { title: '🎬', objectives: '🎯', content: '📖', summar
 const TYPE_COLORS = { title: '#A78BFA', objectives: '#FBBF24', content: '#34D399', summary: '#60A5FA', key_terms: '#F472B6', quiz: '#FB923C' };
 
 export default function SlideMaker() {
+  const { classroomId } = useParams();
   const [topics, setTopics] = useState([]);
   const [topic, setTopic] = useState('');
   const [custom, setCustom] = useState('');

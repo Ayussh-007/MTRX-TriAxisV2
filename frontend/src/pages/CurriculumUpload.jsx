@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import API from '../api/client';
 import toast from 'react-hot-toast';
 
 export default function CurriculumUpload() {
+  const { classroomId } = useParams();
   const [status, setStatus] = useState(false);
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);

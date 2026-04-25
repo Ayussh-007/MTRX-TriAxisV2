@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import API from '../api/client';
 import toast from 'react-hot-toast';
 
@@ -70,6 +71,7 @@ const riskLabel = p => p >= 85 ? 'On Track' : p >= 70 ? 'Monitor' : p >= 50 ? 'A
 const riskBadge = p => p >= 85 ? 'badge-green' : p >= 70 ? 'badge-yellow' : p >= 50 ? 'badge-yellow' : 'badge-red';
 
 export default function Attendance() {
+  const { classroomId } = useParams();
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth() + 1);
@@ -82,9 +84,10 @@ export default function Attendance() {
   const fetchGrid = async () => {
     setLoading(true);
     try {
-      const { data } = await API.get(`/attendance/grid?year=${year}&month=${month}`);
+      const base = classroomId ? `/classrooms/${classroomId}` : '';
+      const { data } = await API.get(`${base}/attendance/grid?year=${year}&month=${month}`);
       setGrid(data);
-      const { data: s } = await API.get(`/attendance/summary?year=${year}&month=${month}`);
+      const { data: s } = await API.get(`${base}/attendance/summary?year=${year}&month=${month}`);
       setSummary(s);
     } catch { toast.error('Failed to load attendance'); }
     setLoading(false);
@@ -117,7 +120,7 @@ export default function Attendance() {
       });
     });
     try {
-      const { data } = await API.post('/attendance/save', { records });
+      const { data } = await API.post(`${classroomId ? `/classrooms/${classroomId}` : ''}/attendance/save`, { records });
       toast.success(`Saved! ${data.present} present, ${data.absent} absent`);
       fetchGrid();
     } catch { toast.error('Failed to save'); }
@@ -128,7 +131,7 @@ export default function Attendance() {
     const today = new Date().toISOString().split('T')[0];
     if (!grid) return;
     const records = grid.students.map(s => ({ student_id: s.id, date: today, present }));
-    await API.post('/attendance/save', { records });
+    await API.post(`${classroomId ? `/classrooms/${classroomId}` : ''}/attendance/save`, { records });
     toast.success(present ? 'All marked present' : 'All marked absent');
     fetchGrid();
   };
