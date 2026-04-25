@@ -127,10 +127,10 @@ export default function LandingPage() {
       <section className="land-hero">
         {/* Login/Signup CTA at top-right */}
         <div className="land-hero-actions">
-          <button className="land-btn land-btn-ghost" onClick={() => navigate('/login')}>
+          <button className="land-btn land-btn-ghost" onClick={() => navigate('/auth')}>
             Log in
           </button>
-          <button className="land-btn land-btn-primary" onClick={() => navigate('/login')}>
+          <button className="land-btn land-btn-primary" onClick={() => navigate('/auth')}>
             Get Started →
           </button>
         </div>
@@ -155,10 +155,10 @@ export default function LandingPage() {
           </p>
 
           <div className="land-hero-cta">
-            <button className="land-btn land-btn-primary land-btn-lg" onClick={() => navigate('/login')}>
+            <button className="land-btn land-btn-primary land-btn-lg" onClick={() => navigate('/auth')}>
               Start Teaching Smarter →
             </button>
-            <button className="land-btn land-btn-outline land-btn-lg" onClick={() => navigate('/')}>
+            <button className="land-btn land-btn-outline land-btn-lg" onClick={() => document.querySelector('.land-features')?.scrollIntoView({ behavior: 'smooth' })}>
               ▶ Explore Features
             </button>
           </div>
@@ -275,7 +275,7 @@ export default function LandingPage() {
         <div className="land-cta-inner">
           <h2>Ready to transform your classroom?</h2>
           <p>Join the future of AI-powered education. Set up in minutes.</p>
-          <button className="land-btn land-btn-primary land-btn-lg" onClick={() => navigate('/login')}>
+          <button className="land-btn land-btn-primary land-btn-lg" onClick={() => navigate('/auth')}>
             Get Started Free →
           </button>
         </div>

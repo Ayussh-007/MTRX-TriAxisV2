@@ -23,6 +23,7 @@ from api.routes.agent import router as agent_router
 from api.routes.auth import router as auth_router
 from api.routes.sharing import router as sharing_router
 from api.routes.calendar import router as calendar_router
+from api.routes.classroom import router as classroom_router
 
 # ── App Instance ─────────────────────────────────────────────
 app = FastAPI(
@@ -59,6 +60,7 @@ app.include_router(agent_router,      prefix="/api/agent",      tags=["Agent"])
 app.include_router(auth_router,       prefix="/api/auth",       tags=["Auth"])
 app.include_router(sharing_router,    prefix="/api/sharing",    tags=["Sharing"])
 app.include_router(calendar_router,   prefix="/api/calendar",   tags=["Calendar"])
+app.include_router(classroom_router,  prefix="/api/classrooms", tags=["Classrooms"])
 
 @app.get("/")
 def root():

@@ -1,35 +1,43 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import API from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
-const NAV = [
+/* ── Role-based navigation ── */
+const TEACHER_NAV = [
   { section: 'Main', items: [
     { to: '/home', icon: '🏠', label: 'Home' },
   ]},
-  { section: 'Teacher', items: [
-    { to: '/curriculum', icon: '📄', label: 'Upload Curriculum' },
+  { section: 'Classroom', items: [
+    { to: '/classrooms', icon: '🏫', label: 'My Classrooms' },
     { to: '/students', icon: '🎒', label: 'Student Manager' },
     { to: '/attendance', icon: '📋', label: 'Attendance' },
+  ]},
+  { section: 'Teaching', items: [
+    { to: '/curriculum', icon: '📄', label: 'Upload Curriculum' },
     { to: '/quiz', icon: '📝', label: 'Quiz Generator' },
-    { to: '/dashboard', icon: '👩‍🏫', label: 'Teacher Dashboard' },
     { to: '/slides', icon: '🖥️', label: 'Slide Maker' },
+    { to: '/dashboard', icon: '👩‍🏫', label: 'Analytics' },
   ]},
   { section: 'AI Tools', items: [
     { to: '/agent', icon: '🤖', label: 'AI Agent' },
   ]},
-  { section: 'Student', items: [
-    { to: '/login', icon: '🔐', label: 'Student Login' },
-    { to: '/portal', icon: '🎒', label: 'Student Portal' },
+];
+
+const STUDENT_NAV = [
+  { section: 'Main', items: [
+    { to: '/portal', icon: '🏠', label: 'My Portal' },
   ]},
 ];
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [health, setHealth] = useState({ ollama: false, vectorstore: false, students_count: 0 });
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
 
-  // Apply theme to <html> on mount and whenever it changes
+  const NAV = user?.role === 'teacher' ? TEACHER_NAV : STUDENT_NAV;
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -45,13 +53,18 @@ export default function Sidebar() {
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
         <div className="sidebar-brand-icon">🎓</div>
         <div className="sidebar-brand-text">
           <h1>MTRX-TriAxis</h1>
-          <span>AI Classroom</span>
+          <span>{user?.role === 'teacher' ? 'Teacher' : 'Student'}</span>
         </div>
       </div>
       <hr className="sidebar-divider" />
@@ -80,24 +93,20 @@ export default function Sidebar() {
       </button>
 
       <hr className="sidebar-divider" />
-      <div className="sidebar-status">
-        <div className="status-dot">
-          <span className={`dot ${health.ollama ? 'dot-green' : 'dot-red'}`} />
-          <span>{health.ollama ? 'Ollama Online' : 'Ollama Offline'}</span>
-        </div>
-        <div className="status-dot">
-          <span className={`dot ${health.vectorstore ? 'dot-green' : 'dot-yellow'}`} />
-          <span>{health.vectorstore ? 'Curriculum Loaded' : 'No Curriculum'}</span>
-        </div>
-        <div className="status-dot">
-          <span className="dot dot-green" />
-          <span>{health.students_count} Students</span>
-        </div>
-      </div>
 
-      <div style={{ padding: '0.6rem 1.3rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.65rem', borderTop: '1px solid var(--border)' }}>
-        MTRX-TriAxis v2.0 · Built with ❤️
-      </div>
+      {/* System status — only for teachers */}
+      {user?.role === 'teacher' && (
+        <div className="sidebar-status">
+          <div className="status-dot">
+            <span className={`dot ${health.ollama ? 'dot-green' : 'dot-red'}`} />
+            <span>{health.ollama ? 'Ollama Online' : 'Ollama Offline'}</span>
+          </div>
+          <div className="status-dot">
+            <span className={`dot ${health.vectorstore ? 'dot-green' : 'dot-yellow'}`} />
+            <span>{health.vectorstore ? 'Curriculum Loaded' : 'No Curriculum'}</span>
+          </div>
+        </div>
+      )}
 
       {/* Logged-in user & logout */}
       {user && (
@@ -119,7 +128,7 @@ export default function Sidebar() {
             </div>
           </div>
           <button
-            onClick={logout}
+            onClick={handleLogout}
             style={{
               width: '100%', padding: '0.35rem 0.6rem', borderRadius: 'var(--radius-sm)',
               background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.15)',
@@ -131,6 +140,10 @@ export default function Sidebar() {
           >🚪 Sign Out</button>
         </div>
       )}
+
+      <div style={{ padding: '0.4rem 1.3rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.6rem' }}>
+        MTRX-TriAxis v2.0
+      </div>
     </aside>
   );
 }

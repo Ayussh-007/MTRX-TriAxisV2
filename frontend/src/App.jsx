@@ -1,8 +1,11 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import LandingPage from './pages/LandingPage';
+import AuthPage from './pages/AuthPage';
 import Home from './pages/Home';
+import ClassroomManager from './pages/ClassroomManager';
 import StudentManager from './pages/StudentManager';
 import Attendance from './pages/Attendance';
 import QuizGenerator from './pages/QuizGenerator';
@@ -10,34 +13,53 @@ import TeacherDashboard from './pages/TeacherDashboard';
 import CurriculumUpload from './pages/CurriculumUpload';
 import SlideMaker from './pages/SlideMaker';
 import AIAgent from './pages/AIAgent';
-import StudentLogin from './pages/StudentLogin';
 import StudentPortal from './pages/StudentPortal';
+
+/* ── Protected Route wrapper ── */
+function RequireAuth({ children, roles }) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/auth" replace />;
+  if (roles && !roles.includes(user.role)) return <Navigate to={user.role === 'teacher' ? '/home' : '/portal'} replace />;
+  return children;
+}
 
 function AppLayout() {
   const location = useLocation();
-  const isLanding = location.pathname === '/';
+  const { user } = useAuth();
+  const standaloneRoutes = ['/', '/auth'];
 
-  // Landing page: no sidebar, full-screen standalone
-  if (isLanding) {
-    return <LandingPage />;
+  // Landing & Auth pages: full-screen, no sidebar
+  if (standaloneRoutes.includes(location.pathname)) {
+    return (
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/auth" element={user ? <Navigate to={user.role === 'teacher' ? '/home' : '/portal'} replace /> : <AuthPage />} />
+      </Routes>
+    );
   }
 
-  // All other pages: sidebar layout
+  // All other pages: sidebar layout, require auth
   return (
     <div className="app-layout">
       <Sidebar />
       <main className="main-content">
         <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/students" element={<StudentManager />} />
-          <Route path="/attendance" element={<Attendance />} />
-          <Route path="/quiz" element={<QuizGenerator />} />
-          <Route path="/dashboard" element={<TeacherDashboard />} />
-          <Route path="/curriculum" element={<CurriculumUpload />} />
-          <Route path="/slides" element={<SlideMaker />} />
-          <Route path="/agent" element={<AIAgent />} />
-          <Route path="/login" element={<StudentLogin />} />
-          <Route path="/portal" element={<StudentPortal />} />
+          {/* ── Teacher Routes ── */}
+          <Route path="/home" element={<RequireAuth roles={['teacher']}><Home /></RequireAuth>} />
+          <Route path="/classrooms" element={<RequireAuth roles={['teacher']}><ClassroomManager /></RequireAuth>} />
+          <Route path="/students" element={<RequireAuth roles={['teacher']}><StudentManager /></RequireAuth>} />
+          <Route path="/attendance" element={<RequireAuth roles={['teacher']}><Attendance /></RequireAuth>} />
+          <Route path="/quiz" element={<RequireAuth roles={['teacher']}><QuizGenerator /></RequireAuth>} />
+          <Route path="/dashboard" element={<RequireAuth roles={['teacher']}><TeacherDashboard /></RequireAuth>} />
+          <Route path="/curriculum" element={<RequireAuth roles={['teacher']}><CurriculumUpload /></RequireAuth>} />
+          <Route path="/slides" element={<RequireAuth roles={['teacher']}><SlideMaker /></RequireAuth>} />
+          <Route path="/agent" element={<RequireAuth roles={['teacher']}><AIAgent /></RequireAuth>} />
+
+          {/* ── Student Routes ── */}
+          <Route path="/portal" element={<RequireAuth roles={['student']}><StudentPortal /></RequireAuth>} />
+
+          {/* ── Fallback ── */}
+          <Route path="*" element={<Navigate to={user?.role === 'teacher' ? '/home' : user ? '/portal' : '/auth'} replace />} />
         </Routes>
       </main>
     </div>

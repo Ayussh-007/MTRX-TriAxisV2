@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import API from '../api/client';
+
 
 /* ── Color palettes per role ── */
 const PALETTES = {
@@ -84,6 +86,7 @@ const Icons = {
 
 export default function AuthPage() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [role, setRole] = useState('student');
   const [mode, setMode] = useState('signup');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -92,8 +95,9 @@ export default function AuthPage() {
   const [showPw, setShowPw] = useState(false);
 
   const P = PALETTES[role];
+  const hasGoogle = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-  /* ── Google OAuth ── */
+  /* ── Google OAuth — hook always called (React rules) ── */
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       setLoading(true); setError('');
@@ -108,6 +112,7 @@ export default function AuthPage() {
         });
         login({ id: data.user.id, name: data.user.name, email: data.user.email,
           picture: data.user.picture || profile.picture, role: data.user.role });
+        navigate(data.user.role === 'teacher' ? '/home' : '/portal');
       } catch { setError('Google sign-in failed. Please try again.'); }
       setLoading(false);
     },
@@ -131,6 +136,7 @@ export default function AuthPage() {
       const { data } = await API.post(endpoint, payload);
       login({ id: data.user.id, name: data.user.name, email: data.user.email,
         picture: data.user.picture, role: data.user.role });
+      navigate(data.user.role === 'teacher' ? '/home' : '/portal');
     } catch (err) {
       setError(err?.response?.data?.detail || (mode === 'signup' ? 'Registration failed' : 'Invalid credentials'));
     }
@@ -208,11 +214,13 @@ export default function AuthPage() {
               </button>
             </div>
 
-            {/* ── Google button ── */}
-            <button className="auth-social-btn" onClick={() => googleLogin()} disabled={loading} type="button">
-              {Icons.google}
-              <span>Google</span>
-            </button>
+            {/* ── Google button (only if configured) ── */}
+            {hasGoogle && (
+              <button className="auth-social-btn" onClick={() => googleLogin()} disabled={loading} type="button">
+                {Icons.google}
+                <span>Google</span>
+              </button>
+            )}
 
             {/* ── Divider ── */}
             <div className="auth-divider"><span>OR EMAIL</span></div>
