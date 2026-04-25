@@ -28,10 +28,7 @@ from backend.teacher_feedback import (
 from backend.attendance_intelligence import get_frequently_absent_students
 from backend.class_weakness import get_top_weak_topics, generate_doubt_sheet
 from backend.weather_context import get_weather_summary, get_weather, is_bad_weather
-from backend.student_model import (
-    list_students, add_student, add_students_bulk,
-    update_student_login_id, get_student,
-)
+from backend.student_model import list_students, get_student
 from backend.content_sharing import (
     create_share_link, get_all_share_links, assign_content_to_student,
 )
@@ -179,6 +176,7 @@ if performance["num_students"] == 0:
     st.stop()
 
 st.markdown("### 📊 Class Overview")
+all_students = list_students()
 
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("👥 Students", performance["num_students"])
@@ -504,115 +502,6 @@ if recent_fb:
     if "feedback_analysis" in st.session_state:
         st.markdown(st.session_state["feedback_analysis"])
 
-# =================================================================
-# STUDENT MANAGEMENT PANEL
-# =================================================================
-st.markdown("---")
-st.markdown("### 👥 Student Management")
-
-mgmt_col1, mgmt_col2 = st.columns([1, 2])
-
-with mgmt_col1:
-    st.markdown("#### ➕ Add Students")
-    add_single_tab, add_bulk_tab = st.tabs(["Single", "📋 Bulk Add"])
-
-    with add_single_tab:
-        with st.form("teacher_add_student_form", clear_on_submit=True):
-            new_name = st.text_input("Name", placeholder="e.g., Ayush Mhatre")
-            new_email = st.text_input("Email (optional)", placeholder="ayush.mhatre25@sakec.ac.in")
-            new_login_id = st.text_input(
-                "Login ID",
-                placeholder="e.g., AI251030",
-                help="Unique ID for student login. Must be unique.",
-            )
-            add_submitted = st.form_submit_button("Add Student", type="primary")
-
-            if add_submitted and new_name.strip():
-                try:
-                    sid = add_student(
-                        new_name.strip(),
-                        new_email.strip() or None,
-                        new_login_id.strip() or None,
-                    )
-                    st.success(f"✅ Added {new_name} (ID: {sid}, Login: {new_login_id or 'Not set'})")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Error: {str(e)}")
-
-    with add_bulk_tab:
-        st.markdown(
-            """
-            <div style='background: rgba(124,111,255,0.08); border: 1px solid rgba(42,214,153,0.2);
-                        border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 0.8rem; font-size: 0.82rem;'>
-                <strong style='color: #22B07D;'>Format:</strong> One per line —
-                <code>Name, Email, LoginID</code><br>
-                <span style='color: #9CA3AF;'>Email & LoginID are optional.</span>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        bulk_text = st.text_area(
-            "Paste students:",
-            height=140,
-            placeholder="Ayush Mhatre, ayush.mhatre25@sakec.ac.in, AI251030\nRiya Patel\nKaran Singh, , STU003",
-            key="td_bulk_input",
-        )
-
-        if st.button("📋 Add All", type="primary", use_container_width=True, key="td_bulk_btn"):
-            if not bulk_text.strip():
-                st.warning("Please enter at least one student.")
-            else:
-                lines = [l.strip() for l in bulk_text.strip().split("\n") if l.strip()]
-                parsed = []
-                for line in lines:
-                    parts = [p.strip() for p in line.split(",")]
-                    name = parts[0] if len(parts) > 0 else ""
-                    email = parts[1] if len(parts) > 1 else ""
-                    login_id = parts[2] if len(parts) > 2 else ""
-                    parsed.append({"name": name, "email": email, "login_id": login_id})
-
-                results = add_students_bulk(parsed)
-                added = [r for r in results if r["status"] == "added"]
-                errors = [r for r in results if r["status"] == "error"]
-
-                if added:
-                    st.success(f"✅ Added {len(added)} student(s)!")
-                if errors:
-                    for e in errors:
-                        st.error(f"❌ {e['name']}: {e['error']}")
-                if added:
-                    st.rerun()
-
-with mgmt_col2:
-    st.markdown("#### 📋 All Students")
-    all_students = list_students()
-
-    if all_students:
-        for s in all_students:
-            s_col1, s_col2 = st.columns([3, 2])
-
-            with s_col1:
-                login_badge = f"🔑 `{s.get('login_id', '')}`" if s.get('login_id') else "⚠️ No login ID"
-                st.markdown(f"**{s['name']}** (ID: {s['id']}) — {login_badge}")
-
-            with s_col2:
-                if not s.get('login_id'):
-                    new_lid = st.text_input(
-                        "Set Login ID",
-                        key=f"lid_{s['id']}",
-                        placeholder="AI251030",
-                        label_visibility="collapsed",
-                    )
-                    if new_lid and st.button("Set", key=f"set_lid_{s['id']}"):
-                        try:
-                            update_student_login_id(s['id'], new_lid.strip())
-                            st.success(f"✅ Login ID set for {s['name']}")
-                            st.rerun()
-                        except Exception as e:
-                            st.error(f"Error: {str(e)}")
-    else:
-        st.info("No students registered yet.")
 
 # =================================================================
 # CONTENT SHARING PANEL
