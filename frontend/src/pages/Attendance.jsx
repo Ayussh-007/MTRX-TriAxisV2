@@ -95,11 +95,11 @@ export default function Attendance() {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th style={{ minWidth: 160, position: 'sticky', left: 0, background: '#F8F9FB', zIndex: 2 }}>Student</th>
+                  <th style={{ minWidth: 160, position: 'sticky', left: 0, background: 'var(--surface-solid)', zIndex: 2 }}>Student</th>
                   {grid.days.map(d => (
-                    <th key={d.date} style={{ textAlign: 'center', minWidth: 48, fontSize: '0.72rem', background: d.is_weekend ? '#F3F4F6' : '#F8F9FB' }}>
+                    <th key={d.date} style={{ textAlign: 'center', minWidth: 48, fontSize: '0.72rem', background: d.is_weekend ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.01)' }}>
                       <div style={{ fontWeight: 700 }}>{d.day}</div>
-                      <div style={{ color: '#9CA3AF', fontWeight: 400 }}>{d.day_abbr}</div>
+                      <div style={{ color: 'var(--text-muted)', fontWeight: 400 }}>{d.day_abbr}</div>
                     </th>
                   ))}
                 </tr>
@@ -107,12 +107,12 @@ export default function Attendance() {
               <tbody>
                 {grid.students.map((s, si) => (
                   <tr key={s.id}>
-                    <td style={{ position: 'sticky', left: 0, background: '#fff', zIndex: 1 }}>
+                    <td style={{ position: 'sticky', left: 0, background: 'var(--surface-solid)', zIndex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <div className="att-avatar">{s.name[0]}</div>
                         <div>
-                          <div style={{ fontWeight: 600, fontSize: '0.82rem' }}>{s.name}</div>
-                          {s.login_id && <div style={{ color: '#9CA3AF', fontSize: '0.7rem' }}>{s.login_id}</div>}
+                          <div style={{ fontWeight: 600, fontSize: '0.82rem', color: 'var(--text)' }}>{s.name}</div>
+                          {s.login_id && <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{s.login_id}</div>}
                         </div>
                       </div>
                     </td>
@@ -130,7 +130,7 @@ export default function Attendance() {
           </div>
 
           {/* Legend */}
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', fontSize: '0.78rem', color: '#4B5563' }}>
+          <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
             <span><span className="att-cell att-present" style={{ width: 20, height: 18, fontSize: '0.65rem' }}>P</span> Present</span>
             <span><span className="att-cell att-absent" style={{ width: 20, height: 18, fontSize: '0.65rem' }}>A</span> Absent</span>
             <span><span className="att-cell att-weekend" style={{ width: 20, height: 18, fontSize: '0.65rem' }}>W</span> Weekend</span>
@@ -150,14 +150,14 @@ export default function Attendance() {
             <div className="section">
               <h3 className="section-title">📊 Monthly Summary ({summary.working_days} working days)</h3>
               {summary.students.map(s => {
-                const color = s.percentage >= 85 ? '#22C55E' : s.percentage >= 70 ? '#F59E0B' : s.percentage >= 50 ? '#F97316' : '#EF4444';
+                const color = s.percentage >= 85 ? '#34D399' : s.percentage >= 70 ? '#FBBF24' : s.percentage >= 50 ? '#FB923C' : '#F87171';
                 return (
                   <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0' }}>
-                    <div style={{ minWidth: 140, fontWeight: 600, fontSize: '0.82rem' }}>{s.name}</div>
+                    <div style={{ minWidth: 140, fontWeight: 600, fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{s.name}</div>
                     <div className="progress-bar" style={{ flex: 1 }}>
                       <div className="progress-fill" style={{ width: `${s.percentage}%`, background: color }} />
                     </div>
-                    <div style={{ minWidth: 90, textAlign: 'right', fontSize: '0.78rem', color: '#4B5563' }}>
+                    <div style={{ minWidth: 90, textAlign: 'right', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                       {s.present}/{s.total} ({s.percentage}%)
                     </div>
                   </div>

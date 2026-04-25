@@ -117,8 +117,8 @@ export default function StudentManager() {
             {students.map(s => (
               <div key={s.id} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', padding: '0.7rem 1rem', borderLeft: '3px solid var(--primary)' }}>
                 <div>
-                  <strong>{s.name}</strong>
-                  <span style={{ color: '#9CA3AF', fontSize: '0.78rem', marginLeft: '0.5rem' }}>
+                  <strong style={{ color: 'var(--text)' }}>{s.name}</strong>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginLeft: '0.5rem' }}>
                     ID: {s.id} · {s.login_id ? `🔑 ${s.login_id}` : '⚠️ No login ID'}
                   </span>
                 </div>
@@ -154,7 +154,7 @@ export default function StudentManager() {
                   <div style={{ marginTop: '1rem' }}>
                     <h4 style={{ marginBottom: '0.5rem' }}>📊 Topic Scores</h4>
                     {Object.entries(dashboard.topic_scores).sort((a,b) => a[1] - b[1]).map(([topic, score]) => {
-                      const color = score >= 70 ? '#22C55E' : score >= 50 ? '#FF9800' : '#EF4444';
+                      const color = score >= 70 ? '#34D399' : score >= 50 ? '#FB923C' : '#F87171';
                       return (
                         <div key={topic} className="card" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.3rem', padding: '0.5rem 1rem', borderLeft: `3px solid ${color}` }}>
                           <span>{score >= 70 ? '✅' : score >= 50 ? '⚠️' : '❌'} {topic}</span>

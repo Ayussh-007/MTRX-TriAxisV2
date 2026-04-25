@@ -21,8 +21,8 @@ export default function QuizGenerator() {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    API.get('/curriculum/topics').then(r => { setTopics(r.data.topics || []); if (r.data.topics?.length) setTopic(r.data.topics[0]); });
-    API.get('/students').then(r => setStudents(r.data));
+    API.get('/curriculum/topics').then(r => { setTopics(r.data.topics || []); if (r.data.topics?.length) setTopic(r.data.topics[0]); }).catch(() => {});
+    API.get('/students').then(r => setStudents(r.data)).catch(() => {});
   }, []);
 
   const generate = async () => {
@@ -41,8 +41,7 @@ export default function QuizGenerator() {
     setEvaluating(true);
     try {
       const { data } = await API.post('/quiz/evaluate', { student_id: parseInt(selectedStudent), quiz_data: quiz, answers });
-      setResult(data);
-      toast.success(`Score: ${data.percentage}%`);
+      setResult(data); toast.success(`Score: ${data.percentage}%`);
     } catch { toast.error('Failed to evaluate'); }
     setEvaluating(false);
   };
@@ -51,48 +50,20 @@ export default function QuizGenerator() {
     if (!quiz) return;
     setSharing(true);
     try {
-      const payload = { quiz_data: quiz, student_ids: shareAll ? [] : shareStudents.map(Number) };
-      const { data } = await API.post('/quiz/share', payload);
+      const { data } = await API.post('/quiz/share', { quiz_data: quiz, student_ids: shareAll ? [] : shareStudents.map(Number) });
       toast.success(`🎉 Quiz shared with ${data.assigned_to} students!`);
     } catch { toast.error('Failed to share quiz'); }
     setSharing(false);
   };
 
-  const toggleShareStudent = (id) => {
-    setShareStudents(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
-  };
+  const toggleShareStudent = (id) => setShareStudents(p => p.includes(id) ? p.filter(s => s !== id) : [...p, id]);
 
-  // ── Edit functions ──
-  const updateQuestion = (qi, field, value) => {
-    setQuiz(prev => ({
-      ...prev,
-      questions: prev.questions.map((q, i) => i === qi ? { ...q, [field]: value } : q),
-    }));
-  };
-
-  const updateOption = (qi, optKey, value) => {
-    setQuiz(prev => ({
-      ...prev,
-      questions: prev.questions.map((q, i) =>
-        i === qi ? { ...q, options: { ...q.options, [optKey]: value } } : q
-      ),
-    }));
-  };
-
-  const removeQuestion = (qi) => {
-    setQuiz(prev => ({ ...prev, questions: prev.questions.filter((_, i) => i !== qi) }));
-    toast.success('Question removed');
-  };
-
-  const addQuestion = () => {
-    setQuiz(prev => ({
-      ...prev,
-      questions: [
-        ...prev.questions,
-        { question: 'New question — edit this', options: { A: 'Option A', B: 'Option B', C: 'Option C', D: 'Option D' }, correct: 'A', explanation: 'Explanation here.' },
-      ],
-    }));
-  };
+  const updateQuestion = (qi, field, value) => setQuiz(p => ({ ...p, questions: p.questions.map((q, i) => i === qi ? { ...q, [field]: value } : q) }));
+  const updateOption = (qi, k, v) => setQuiz(p => ({ ...p, questions: p.questions.map((q, i) => i === qi ? { ...q, options: { ...q.options, [k]: v } } : q) }));
+  const removeQuestion = (qi) => { setQuiz(p => ({ ...p, questions: p.questions.filter((_, i) => i !== qi) })); toast.success('Removed'); };
+  const addQuestion = () => setQuiz(p => ({
+    ...p, questions: [...p.questions, { question: 'New question — edit this', options: { A: 'Option A', B: 'Option B', C: 'Option C', D: 'Option D' }, correct: 'A', explanation: '' }],
+  }));
 
   return (
     <div>
@@ -111,7 +82,7 @@ export default function QuizGenerator() {
             </select>
           </div>
           <div className="form-group">
-            <label className="form-label">✏️ Custom Topic (overrides)</label>
+            <label className="form-label">✏️ Custom Topic</label>
             <input className="form-input" value={customTopic} onChange={e => setCustomTopic(e.target.value)} placeholder="Newton's Laws" />
           </div>
           <div className="form-group">
@@ -130,7 +101,7 @@ export default function QuizGenerator() {
           {/* Toolbar */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
             <h3 className="section-title" style={{ margin: 0 }}>📝 {quiz.topic} — {quiz.questions.length} Questions</h3>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button className={`btn btn-sm ${showAnswers ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setShowAnswers(!showAnswers)}>
                 {showAnswers ? '👁️ Answers Shown' : '🙈 Answers Hidden'}
               </button>
@@ -141,149 +112,126 @@ export default function QuizGenerator() {
           </div>
 
           {/* Share Panel */}
-          <div className="card" style={{ marginBottom: '1.5rem', borderLeft: '4px solid var(--info)', background: 'rgba(96,165,250,0.04)' }}>
+          <div className="card" style={{ marginBottom: '1.5rem', borderLeft: '3px solid var(--info)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
-                <h4 style={{ marginBottom: '0.4rem', fontSize: '0.95rem' }}>📤 Share Quiz with Students</h4>
-                <p style={{ color: 'var(--text-light)', fontSize: '0.82rem', margin: 0 }}>
-                  Students will see this quiz in their portal and can submit answers.
-                </p>
+                <h4 style={{ marginBottom: '0.4rem', fontSize: '0.95rem', color: 'var(--text)' }}>📤 Share with Students</h4>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', margin: 0 }}>Students will see this in their portal.</p>
                 <div style={{ marginTop: '0.6rem' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', cursor: 'pointer', marginBottom: '0.3rem' }}>
-                    <input type="radio" name="shareTarget" checked={shareAll} onChange={() => setShareAll(true)} style={{ accentColor: 'var(--primary)' }} />
-                    Share with <strong>all students</strong> ({students.length})
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', cursor: 'pointer', marginBottom: '0.3rem', color: 'var(--text-secondary)' }}>
+                    <input type="radio" name="shareTarget" checked={shareAll} onChange={() => setShareAll(true)} /> All students ({students.length})
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', cursor: 'pointer' }}>
-                    <input type="radio" name="shareTarget" checked={!shareAll} onChange={() => setShareAll(false)} style={{ accentColor: 'var(--primary)' }} />
-                    Share with <strong>selected students</strong>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                    <input type="radio" name="shareTarget" checked={!shareAll} onChange={() => setShareAll(false)} /> Selected students
                   </label>
                 </div>
                 {!shareAll && (
-                  <div style={{ marginTop: '0.5rem', maxHeight: 150, overflowY: 'auto', padding: '0.5rem', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }}>
+                  <div style={{ marginTop: '0.5rem', maxHeight: 140, overflowY: 'auto', padding: '0.5rem', border: '1px solid var(--glass-border)', borderRadius: 8, background: 'rgba(255,255,255,0.02)' }}>
                     {students.map(s => (
-                      <label key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', padding: '2px 0', cursor: 'pointer' }}>
-                        <input type="checkbox" checked={shareStudents.includes(s.id)} onChange={() => toggleShareStudent(s.id)} style={{ accentColor: 'var(--primary)' }} />
-                        {s.name}
+                      <label key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.82rem', padding: '2px 0', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                        <input type="checkbox" checked={shareStudents.includes(s.id)} onChange={() => toggleShareStudent(s.id)} /> {s.name}
                       </label>
                     ))}
                   </div>
                 )}
               </div>
               <button className="btn btn-primary" onClick={shareQuiz} disabled={sharing || (!shareAll && shareStudents.length === 0)}>
-                {sharing ? '⏳ Sharing...' : '📤 Share Quiz'}
+                {sharing ? '⏳...' : '📤 Share Quiz'}
               </button>
             </div>
           </div>
 
-          {/* Evaluate Form (Teacher quick-eval) */}
+          {/* Teacher Quick Eval */}
           <div className="form-group" style={{ maxWidth: 300, marginBottom: '1rem' }}>
-            <label className="form-label">🎒 Answer as Student (Teacher Quick-Eval)</label>
+            <label className="form-label">🎒 Answer as Student (Teacher Eval)</label>
             <select className="form-select" value={selectedStudent} onChange={e => setSelectedStudent(e.target.value)}>
               <option value="">-- Choose --</option>
-              {students.map(s => <option key={s.id} value={s.id}>{s.name} (ID: {s.id})</option>)}
+              {students.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
             </select>
           </div>
 
           {/* Questions */}
           {quiz.questions.map((q, qi) => (
-            <div key={qi} className="card" style={{ marginBottom: '1rem', borderLeft: showAnswers ? `3px solid ${q.correct ? '#22C55E' : 'var(--primary)'}` : '3px solid var(--border)' }}>
-              {/* Question */}
+            <div key={qi} className="card" style={{ marginBottom: '1rem', borderLeft: showAnswers ? '3px solid #34D399' : '3px solid var(--glass-border)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
                 <div style={{ flex: 1 }}>
                   {editMode ? (
                     <div className="form-group" style={{ marginBottom: '0.5rem' }}>
-                      <label className="form-label" style={{ fontSize: '0.75rem' }}>Question {qi + 1}</label>
+                      <label className="form-label" style={{ fontSize: '0.72rem' }}>Question {qi + 1}</label>
                       <textarea className="form-textarea" value={q.question} onChange={e => updateQuestion(qi, 'question', e.target.value)} rows={2} style={{ fontWeight: 600 }} />
                     </div>
                   ) : (
-                    <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Q{qi + 1}. {q.question}</p>
+                    <p style={{ fontWeight: 600, marginBottom: '0.5rem', color: 'var(--text)' }}>Q{qi + 1}. {q.question}</p>
                   )}
                 </div>
-                {editMode && (
-                  <button className="btn btn-danger btn-sm" onClick={() => removeQuestion(qi)} title="Remove question" style={{ flexShrink: 0 }}>🗑️</button>
-                )}
+                {editMode && <button className="btn btn-danger btn-sm" onClick={() => removeQuestion(qi)}>🗑️</button>}
               </div>
 
-              {/* Options */}
               {Object.entries(q.options).map(([key, val]) => {
                 const isCorrect = key === q.correct;
                 return (
                   <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.3rem 0' }}>
-                    {/* Radio for answering */}
-                    <input type="radio" name={`q${qi}`} value={key} checked={answers[qi] === key}
-                      onChange={() => setAnswers(prev => ({ ...prev, [qi]: key }))}
-                      style={{ accentColor: 'var(--primary)', flexShrink: 0 }} />
-
+                    <input type="radio" name={`q${qi}`} value={key} checked={answers[qi] === key} onChange={() => setAnswers(p => ({ ...p, [qi]: key }))} />
                     {editMode ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flex: 1 }}>
-                        <strong style={{ color: isCorrect && showAnswers ? '#22C55E' : '#374151', width: 20 }}>{key}.</strong>
+                        <strong style={{ color: isCorrect && showAnswers ? '#34D399' : 'var(--text-muted)', width: 20 }}>{key}.</strong>
                         <input className="form-input" value={val} onChange={e => updateOption(qi, key, e.target.value)} style={{ flex: 1 }} />
                       </div>
                     ) : (
-                      <label style={{ cursor: 'pointer', fontSize: '0.88rem', flex: 1, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                        <strong style={{ color: isCorrect && showAnswers ? '#22C55E' : '#374151' }}>{key}.</strong>
-                        <span style={{ color: isCorrect && showAnswers ? '#22C55E' : undefined, fontWeight: isCorrect && showAnswers ? 600 : 400 }}>
-                          {val}
-                        </span>
-                        {isCorrect && showAnswers && <span style={{ color: '#22C55E', fontSize: '0.75rem', fontWeight: 700 }}>✓ CORRECT</span>}
+                      <label style={{ cursor: 'pointer', fontSize: '0.88rem', flex: 1, display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--text-secondary)' }}>
+                        <strong style={{ color: isCorrect && showAnswers ? '#34D399' : 'var(--text-muted)' }}>{key}.</strong>
+                        <span style={{ color: isCorrect && showAnswers ? '#34D399' : 'var(--text-secondary)', fontWeight: isCorrect && showAnswers ? 600 : 400 }}>{val}</span>
+                        {isCorrect && showAnswers && <span style={{ color: '#34D399', fontSize: '0.72rem', fontWeight: 700 }}>✓ CORRECT</span>}
                       </label>
                     )}
                   </div>
                 );
               })}
 
-              {/* Correct answer selector in edit mode */}
               {editMode && (
-                <div className="form-group" style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
-                  <label className="form-label" style={{ fontSize: '0.75rem' }}>Correct Answer</label>
-                  <select className="form-select" value={q.correct || ''} onChange={e => updateQuestion(qi, 'correct', e.target.value)} style={{ maxWidth: 100 }}>
-                    {Object.keys(q.options).map(k => <option key={k} value={k}>{k}</option>)}
-                  </select>
-                </div>
+                <>
+                  <div className="form-group" style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                    <label className="form-label" style={{ fontSize: '0.72rem' }}>Correct Answer</label>
+                    <select className="form-select" value={q.correct || ''} onChange={e => updateQuestion(qi, 'correct', e.target.value)} style={{ maxWidth: 100 }}>
+                      {Object.keys(q.options).map(k => <option key={k} value={k}>{k}</option>)}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" style={{ fontSize: '0.72rem' }}>Explanation</label>
+                    <textarea className="form-textarea" value={q.explanation || ''} onChange={e => updateQuestion(qi, 'explanation', e.target.value)} rows={2} />
+                  </div>
+                </>
               )}
 
-              {/* Explanation in edit mode */}
-              {editMode && (
-                <div className="form-group" style={{ marginTop: '0.3rem' }}>
-                  <label className="form-label" style={{ fontSize: '0.75rem' }}>Explanation</label>
-                  <textarea className="form-textarea" value={q.explanation || ''} onChange={e => updateQuestion(qi, 'explanation', e.target.value)} rows={2} />
-                </div>
-              )}
-
-              {/* Answer key (read-only view) */}
               {!editMode && showAnswers && (
-                <div style={{ marginTop: '0.5rem', padding: '0.5rem 0.7rem', borderRadius: 8, background: '#F0FDF4', border: '1px solid #BBF7D0' }}>
-                  <div style={{ fontSize: '0.82rem', color: '#166534' }}>
-                    <strong>✅ Answer: {q.correct}</strong>{q.explanation && ` — ${q.explanation}`}
+                <div style={{ marginTop: '0.5rem', padding: '0.5rem 0.7rem', borderRadius: 8, background: 'rgba(52,211,153,0.06)', border: '1px solid rgba(52,211,153,0.12)' }}>
+                  <div style={{ fontSize: '0.82rem', color: '#34D399' }}>
+                    <strong>✅ Answer: {q.correct}</strong>{q.explanation && <span style={{ color: 'var(--text-muted)' }}> — {q.explanation}</span>}
                   </div>
                 </div>
               )}
 
-              {/* Evaluation result */}
               {result && result.results && result.results[qi] && (
-                <div style={{ marginTop: '0.5rem', padding: '0.5rem', borderRadius: 8, background: result.results[qi].is_correct ? '#F0FDF4' : '#FEF2F2' }}>
+                <div style={{ marginTop: '0.5rem', padding: '0.5rem 0.7rem', borderRadius: 8, background: result.results[qi].is_correct ? 'rgba(52,211,153,0.06)' : 'rgba(248,113,113,0.06)', color: result.results[qi].is_correct ? '#34D399' : '#F87171', fontSize: '0.85rem' }}>
                   {result.results[qi].is_correct ? '✅ Correct' : `❌ Wrong — Answer: ${result.results[qi].correct_answer}`}
                 </div>
               )}
             </div>
           ))}
 
-          {/* Add question button in edit mode */}
           {editMode && (
-            <button className="btn btn-secondary btn-block" onClick={addQuestion} style={{ marginBottom: '1rem' }}>
-              + Add New Question
-            </button>
+            <button className="btn btn-secondary btn-block" onClick={addQuestion} style={{ marginBottom: '1rem' }}>+ Add Question</button>
           )}
 
           {!result && (
             <button className="btn btn-primary btn-block" onClick={evaluate} disabled={evaluating || !selectedStudent}>
-              {evaluating ? '⏳ Evaluating...' : '✅ Submit Answers (Teacher Quick-Eval)'}
+              {evaluating ? '⏳ Evaluating...' : '✅ Submit Answers'}
             </button>
           )}
 
           {result && (
-            <div className="card" style={{ borderLeft: '4px solid var(--primary)', marginTop: '1rem' }}>
-              <h3>🏆 Result: {result.score}/{result.max_score} ({result.percentage}%)</h3>
+            <div className="card" style={{ borderLeft: '3px solid var(--primary)', marginTop: '1rem' }}>
+              <h3 style={{ color: 'var(--primary-light)' }}>🏆 Result: {result.score}/{result.max_score} ({result.percentage}%)</h3>
             </div>
           )}
         </div>

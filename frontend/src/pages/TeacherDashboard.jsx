@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import API from '../api/client';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from 'recharts';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 export default function TeacherDashboard() {
   const [perf, setPerf] = useState(null);
@@ -17,11 +17,11 @@ export default function TeacherDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    API.get('/teacher/performance').then(r => setPerf(r.data));
-    API.get('/teacher/risk-heatmap').then(r => setRisk(r.data));
-    API.get('/teacher/weather').then(r => setWeather(r.data));
-    API.get('/teacher/weak-topics').then(r => setWeakTopics(r.data));
-    API.get('/quiz/trends').then(r => setTrends(r.data));
+    API.get('/teacher/performance').then(r => setPerf(r.data)).catch(() => {});
+    API.get('/teacher/risk-heatmap').then(r => setRisk(r.data)).catch(() => {});
+    API.get('/teacher/weather').then(r => setWeather(r.data)).catch(() => {});
+    API.get('/teacher/weak-topics').then(r => setWeakTopics(r.data)).catch(() => {});
+    API.get('/quiz/trends').then(r => setTrends(r.data)).catch(() => {});
   }, []);
 
   const genSuggestions = async () => {
@@ -38,10 +38,12 @@ export default function TeacherDashboard() {
     setLoadingDoubt(false);
   };
 
-  const riskColor = (level) => ({ critical: '#EF4444', high: '#FF9800', medium: '#FFC107', low: '#22C55E' }[level] || '#888');
-  const trendColor = (t) => t === 'improving' ? '#22C55E' : t === 'declining' ? '#EF4444' : '#F59E0B';
+  const riskColor = (level) => ({ critical: '#F87171', high: '#FB923C', medium: '#FBBF24', low: '#34D399' }[level] || '#64748B');
+  const trendColor = (t) => t === 'improving' ? '#34D399' : t === 'declining' ? '#F87171' : '#FBBF24';
   const trendIcon = (t) => t === 'improving' ? '📈' : t === 'declining' ? '📉' : '➡️';
-  const scoreBarColor = (val) => val >= 70 ? '#22C55E' : val >= 50 ? '#FB923C' : '#EF4444';
+  const scoreBarColor = (val) => val >= 70 ? '#34D399' : val >= 50 ? '#FB923C' : '#F87171';
+
+  const chartTooltipStyle = { backgroundColor: '#151A28', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, color: '#E8ECF4' };
 
   return (
     <div>
@@ -50,7 +52,6 @@ export default function TeacherDashboard() {
         <p>Class analytics, quiz trends, and AI-powered teaching suggestions.</p>
       </div>
 
-      {/* Tabs */}
       <div className="tabs">
         {[
           { id: 'overview', label: '📊 Overview' },
@@ -64,25 +65,23 @@ export default function TeacherDashboard() {
         ))}
       </div>
 
-      {/* ──── OVERVIEW TAB ──── */}
+      {/* ──── OVERVIEW ──── */}
       {activeTab === 'overview' && (
         <>
           {weather && (
             <div className={`alert ${weather.is_bad ? 'alert-danger' : 'alert-info'}`}>
-              {weather.is_bad ? '⚠️ Bad Weather Alert: ' : '☀️ '}{weather.summary}
+              {weather.is_bad ? '⚠️ Bad Weather: ' : '☀️ '}{weather.summary}
             </div>
           )}
-
           {perf && (
             <div className="metric-row">
               <div className="metric-card"><div className="label">👥 Students</div><div className="value">{perf.num_students}</div></div>
               <div className="metric-card"><div className="label">📈 Class Avg</div><div className="value">{perf.class_avg}%</div></div>
-              <div className="metric-card"><div className="label">📅 Avg Attendance</div><div className="value">{perf.avg_attendance}%</div></div>
+              <div className="metric-card"><div className="label">📅 Attendance</div><div className="value">{perf.avg_attendance}%</div></div>
               <div className="metric-card"><div className="label">⚠️ Weak Topics</div><div className="value">{weakTopics.length}</div></div>
-              <div className="metric-card"><div className="label">📝 Quizzes Given</div><div className="value">{trends?.quizzes_over_time?.length || 0}</div></div>
+              <div className="metric-card"><div className="label">📝 Quizzes</div><div className="value">{trends?.quizzes_over_time?.length || 0}</div></div>
             </div>
           )}
-
           {perf && perf.per_student.length > 0 && (
             <div className="section">
               <h3 className="section-title">👥 Student Performance</h3>
@@ -91,20 +90,14 @@ export default function TeacherDashboard() {
                   <thead><tr><th>ID</th><th>Name</th><th>Score</th><th>Attendance</th><th>Trend</th></tr></thead>
                   <tbody>
                     {perf.per_student.map(s => {
-                      const studentTrend = trends?.student_trends?.find(t => t.id === s.id);
+                      const st = trends?.student_trends?.find(t => t.id === s.id);
                       return (
                         <tr key={s.id}>
                           <td>{s.id}</td>
-                          <td><strong>{s.name}</strong></td>
-                          <td style={{ color: s.overall_score >= 70 ? '#22C55E' : s.overall_score >= 50 ? '#FF9800' : '#EF4444' }}>{s.overall_score}%</td>
-                          <td style={{ color: s.attendance_rate >= 75 ? '#22C55E' : '#FF9800' }}>{s.attendance_rate}%</td>
-                          <td>
-                            {studentTrend ? (
-                              <span style={{ color: trendColor(studentTrend.trend), fontWeight: 600, fontSize: '0.82rem' }}>
-                                {trendIcon(studentTrend.trend)} {studentTrend.trend}
-                              </span>
-                            ) : '-'}
-                          </td>
+                          <td style={{ color: 'var(--text)' }}><strong>{s.name}</strong></td>
+                          <td style={{ color: s.overall_score >= 70 ? '#34D399' : s.overall_score >= 50 ? '#FB923C' : '#F87171', fontWeight: 700 }}>{s.overall_score}%</td>
+                          <td style={{ color: s.attendance_rate >= 75 ? '#34D399' : '#FB923C', fontWeight: 600 }}>{s.attendance_rate}%</td>
+                          <td>{st ? <span style={{ color: trendColor(st.trend), fontWeight: 600, fontSize: '0.82rem' }}>{trendIcon(st.trend)} {st.trend}</span> : '—'}</td>
                         </tr>
                       );
                     })}
@@ -116,28 +109,25 @@ export default function TeacherDashboard() {
         </>
       )}
 
-      {/* ──── QUIZ TRENDS TAB ──── */}
+      {/* ──── QUIZ TRENDS ──── */}
       {activeTab === 'trends' && trends && (
         <>
-          {/* Quizzes Over Time */}
           {trends.quizzes_over_time.length > 0 ? (
             <>
               <div className="section">
                 <h3 className="section-title">📈 Quiz Scores Over Time</h3>
-                <div className="card" style={{ padding: '1rem' }}>
-                  <ResponsiveContainer width="100%" height={300}>
+                <div className="card" style={{ padding: '1.2rem' }}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <LineChart data={trends.quizzes_over_time}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                      <XAxis dataKey="topic" tick={{ fontSize: 12 }} interval={0} angle={-30} textAnchor="end" height={60} />
-                      <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
-                      <Tooltip formatter={(val) => `${val}%`} labelStyle={{ fontWeight: 700 }} contentStyle={{ borderRadius: 8, border: '1px solid #E5E7EB' }} />
-                      <Line type="monotone" dataKey="class_avg" name="Class Average" stroke="#22B07D" strokeWidth={3} dot={{ r: 5, fill: '#22B07D' }} activeDot={{ r: 7 }} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                      <XAxis dataKey="topic" tick={{ fontSize: 11, fill: '#94A3B8' }} interval={0} angle={-25} textAnchor="end" height={60} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#94A3B8' }} />
+                      <Tooltip formatter={(v) => `${v}%`} contentStyle={chartTooltipStyle} />
+                      <Line type="monotone" dataKey="class_avg" name="Class Avg" stroke="#34D399" strokeWidth={3} dot={{ r: 5, fill: '#34D399' }} activeDot={{ r: 7, fill: '#22B07D' }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               </div>
-
-              {/* Quiz Details Table */}
               <div className="section">
                 <h3 className="section-title">📋 Quiz History</h3>
                 <div className="table-container">
@@ -146,10 +136,10 @@ export default function TeacherDashboard() {
                     <tbody>
                       {trends.quizzes_over_time.map((q, i) => (
                         <tr key={i}>
-                          <td><strong>{q.topic}</strong></td>
+                          <td style={{ color: 'var(--text)' }}><strong>{q.topic}</strong></td>
                           <td style={{ color: scoreBarColor(q.class_avg), fontWeight: 700 }}>{q.class_avg}%</td>
                           <td>{q.students_attempted}</td>
-                          <td style={{ color: '#6B7280', fontSize: '0.82rem' }}>{q.date?.split('T')[0] || '-'}</td>
+                          <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>{q.date?.split('T')[0] || '—'}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -158,22 +148,21 @@ export default function TeacherDashboard() {
               </div>
             </>
           ) : (
-            <div className="alert alert-info">No quizzes recorded yet. Generate and evaluate a quiz to see trends.</div>
+            <div className="alert alert-info">No quizzes recorded yet. Generate and share a quiz to see trends.</div>
           )}
 
-          {/* Topic Performance Bar Chart */}
           {Object.keys(trends.topic_averages).length > 0 && (
             <div className="section">
-              <h3 className="section-title">📊 Topic-Wise Performance</h3>
-              <div className="card" style={{ padding: '1rem' }}>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={Object.entries(trends.topic_averages).map(([topic, d]) => ({ topic, average: d.average, attempts: d.attempts }))}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                    <XAxis dataKey="topic" tick={{ fontSize: 12 }} interval={0} angle={-25} textAnchor="end" height={70} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={(val, name) => name === 'average' ? `${val}%` : val} contentStyle={{ borderRadius: 8, border: '1px solid #E5E7EB' }} />
-                    <Bar dataKey="average" name="Average Score" radius={[6, 6, 0, 0]}>
-                      {Object.entries(trends.topic_averages).map(([topic, d], i) => (
+              <h3 className="section-title">📊 Topic Performance</h3>
+              <div className="card" style={{ padding: '1.2rem' }}>
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={Object.entries(trends.topic_averages).map(([t, d]) => ({ topic: t, average: d.average }))}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                    <XAxis dataKey="topic" tick={{ fontSize: 11, fill: '#94A3B8' }} interval={0} angle={-25} textAnchor="end" height={70} />
+                    <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#94A3B8' }} />
+                    <Tooltip contentStyle={chartTooltipStyle} formatter={(v) => `${v}%`} />
+                    <Bar dataKey="average" name="Avg Score" radius={[6, 6, 0, 0]}>
+                      {Object.entries(trends.topic_averages).map(([, d], i) => (
                         <Cell key={i} fill={scoreBarColor(d.average)} />
                       ))}
                     </Bar>
@@ -183,34 +172,26 @@ export default function TeacherDashboard() {
             </div>
           )}
 
-          {/* Student Trends */}
           {trends.student_trends.length > 0 && (
             <div className="section">
               <h3 className="section-title">👥 Per-Student Trends</h3>
               <div className="card-grid">
                 {trends.student_trends.map(s => (
-                  <div key={s.id} className="card" style={{ borderTop: `3px solid ${trendColor(s.trend)}` }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                      <strong>{s.name}</strong>
-                      <span className="badge" style={{ background: `${trendColor(s.trend)}15`, color: trendColor(s.trend) }}>
+                  <div key={s.id} className="card" style={{ borderTop: `2px solid ${trendColor(s.trend)}` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                      <strong style={{ color: 'var(--text)' }}>{s.name}</strong>
+                      <span className="badge" style={{ background: `${trendColor(s.trend)}15`, color: trendColor(s.trend), border: `1px solid ${trendColor(s.trend)}30` }}>
                         {trendIcon(s.trend)} {s.trend}
                       </span>
                     </div>
-                    <div style={{ fontSize: '0.82rem', color: '#4B5563', marginBottom: '0.4rem' }}>
-                      Overall: <strong>{s.overall}%</strong> · {s.recent_scores.length} quizzes
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+                      Overall: <strong style={{ color: 'var(--text)' }}>{s.overall}%</strong> · {s.recent_scores.length} quizzes
                     </div>
-                    {/* Mini sparkline of recent scores */}
                     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 32 }}>
-                      {s.recent_scores.map((sc, i) => {
-                        const h = Math.max(4, (sc.percentage / 100) * 30);
-                        return (
-                          <div key={i} title={`${sc.topic}: ${sc.percentage}%`}
-                            style={{ width: 12, height: h, background: scoreBarColor(sc.percentage), borderRadius: '3px 3px 0 0', transition: 'all 0.3s' }} />
-                        );
-                      })}
-                    </div>
-                    <div style={{ fontSize: '0.68rem', color: '#9CA3AF', marginTop: '0.3rem' }}>
-                      {s.recent_scores.map(sc => sc.topic).slice(-3).join(' → ')}
+                      {s.recent_scores.map((sc, i) => (
+                        <div key={i} title={`${sc.topic}: ${sc.percentage}%`}
+                          style={{ width: 14, height: Math.max(4, (sc.percentage / 100) * 30), background: scoreBarColor(sc.percentage), borderRadius: '4px 4px 0 0', transition: 'all 0.3s', opacity: 0.85 }} />
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -220,7 +201,7 @@ export default function TeacherDashboard() {
         </>
       )}
 
-      {/* ──── RISK & WEAK TOPICS TAB ──── */}
+      {/* ──── RISK & WEAK ──── */}
       {activeTab === 'risk' && (
         <>
           {risk.length > 0 && (
@@ -228,29 +209,26 @@ export default function TeacherDashboard() {
               <h3 className="section-title">🔥 Student Risk Levels</h3>
               <div className="card-grid">
                 {risk.map(r => (
-                  <div key={r.id} className="card" style={{ borderLeft: `4px solid ${riskColor(r.risk_level)}`, padding: '0.6rem 1rem' }}>
-                    <strong>{r.name}</strong><br />
-                    <span className="badge" style={{ background: `${riskColor(r.risk_level)}15`, color: riskColor(r.risk_level), marginTop: 4 }}>
+                  <div key={r.id} className="card" style={{ borderLeft: `3px solid ${riskColor(r.risk_level)}` }}>
+                    <strong style={{ color: 'var(--text)' }}>{r.name}</strong><br />
+                    <span className="badge" style={{ background: `${riskColor(r.risk_level)}12`, color: riskColor(r.risk_level), border: `1px solid ${riskColor(r.risk_level)}30`, marginTop: 4 }}>
                       {r.risk_level.toUpperCase()} · {r.risk_score}%
                     </span>
-                    <div style={{ fontSize: '0.75rem', color: '#6B7280', marginTop: 4 }}>
-                      Score: {r.overall_score}% · Att: {r.attendance}%
-                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 6 }}>Score: {r.overall_score}% · Att: {r.attendance}%</div>
                   </div>
                 ))}
               </div>
             </div>
           )}
-
           {weakTopics.length > 0 && (
             <div className="section">
               <h3 className="section-title">📝 Class Weak Topics</h3>
               {weakTopics.map((w, i) => {
-                const color = w.class_avg < 30 ? '#EF4444' : w.class_avg < 50 ? '#FF9800' : '#FFC107';
+                const c = w.class_avg < 30 ? '#F87171' : w.class_avg < 50 ? '#FB923C' : '#FBBF24';
                 return (
-                  <div key={i} className="card" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', padding: '0.5rem 1rem' }}>
-                    <span><strong style={{ color }}>#{i + 1}</strong> {w.topic} <span style={{ color: '#9CA3AF', fontSize: '0.8rem' }}>— {w.students_struggling}/{w.total_students} struggling</span></span>
-                    <strong style={{ color }}>{w.class_avg}%</strong>
+                  <div key={i} className="card" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', padding: '0.6rem 1.1rem' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}><strong style={{ color: c }}>#{i + 1}</strong> {w.topic} <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>— {w.students_struggling}/{w.total_students} struggling</span></span>
+                    <strong style={{ color: c }}>{w.class_avg}%</strong>
                   </div>
                 );
               })}
@@ -263,12 +241,12 @@ export default function TeacherDashboard() {
         </>
       )}
 
-      {/* ──── AI SUGGESTIONS TAB ──── */}
+      {/* ──── AI ──── */}
       {activeTab === 'ai' && (
         <div className="section">
           <h3 className="section-title">🧠 AI Teaching Suggestions</h3>
-          <p style={{ color: 'var(--text-light)', fontSize: '0.85rem', marginBottom: '1rem' }}>
-            AI analyses class performance, weather conditions, and teaching preferences to generate tailored advice.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+            AI analyses class performance, weather, and preferences to generate tailored advice.
           </p>
           <button className="btn btn-primary" onClick={genSuggestions} disabled={loadingSugg}>
             {loadingSugg ? '⏳ Analyzing (30-60s)...' : '💡 Generate Suggestions'}
