@@ -58,7 +58,7 @@ export default function ClassroomStudentView() {
       }}>
         <div>
           <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>
-            🏫 {classroom.name}
+            {classroom.name}
           </h1>
           {classroom.subject && (
             <span style={{
@@ -77,16 +77,16 @@ export default function ClassroomStudentView() {
           gap: '0.8rem', marginBottom: '1.5rem',
         }}>
           {[
-            { label: 'Score', value: `${dashboard.overall_score}%`, icon: '📈', color: '#34D399' },
-            { label: 'Attendance', value: `${dashboard.attendance_rate}%`, icon: '📅', color: '#60A5FA' },
-            { label: 'Weak Topics', value: dashboard.weak_topics.length, icon: '⚠️', color: '#FB923C' },
-            { label: 'Strong Topics', value: dashboard.strong_topics.length, icon: '✅', color: '#22C55E' },
+            { label: 'Score', value: `${dashboard.overall_score}%`, color: '#34D399' },
+            { label: 'Attendance', value: `${dashboard.attendance_rate}%`, color: '#60A5FA' },
+            { label: 'Weak Topics', value: dashboard.weak_topics.length, color: '#FB923C' },
+            { label: 'Strong Topics', value: dashboard.strong_topics.length, color: '#22C55E' },
           ].map((m, i) => (
             <div key={i} style={{
               padding: '1rem', borderRadius: 'var(--radius-md)',
               background: 'var(--glass)', border: '1px solid var(--glass-border)',
             }}>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>{m.icon} {m.label}</div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>{m.label}</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 800, color: m.color, marginTop: '0.2rem' }}>{m.value}</div>
             </div>
           ))}
@@ -100,8 +100,8 @@ export default function ClassroomStudentView() {
           background: 'var(--glass)', border: '1px solid rgba(34,211,153,0.2)',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ color: 'var(--text)', margin: 0, fontSize: '1rem' }}>📝 {activeQuiz.topic} Quiz</h3>
-            <button className="btn btn-secondary btn-sm" onClick={closeQuiz}>✕ Close</button>
+            <h3 style={{ color: 'var(--text)', margin: 0, fontSize: '1rem' }}>{activeQuiz.topic} Quiz</h3>
+            <button className="btn btn-secondary btn-sm" onClick={closeQuiz}>Close</button>
           </div>
 
           {activeQuiz.quiz_data.questions.map((q, qi) => (
@@ -120,7 +120,7 @@ export default function ClassroomStudentView() {
               ))}
               {quizResult && quizResult.results[qi] && (
                 <div style={{ marginTop: '0.5rem', padding: '0.4rem 0.7rem', borderRadius: 8, background: quizResult.results[qi].is_correct ? 'rgba(52,211,153,0.08)' : 'rgba(248,113,113,0.08)', fontSize: '0.82rem', color: quizResult.results[qi].is_correct ? '#34D399' : '#F87171' }}>
-                  {quizResult.results[qi].is_correct ? '✅ Correct!' : `❌ Wrong — Answer: ${quizResult.results[qi].correct_answer}`}
+                  {quizResult.results[qi].is_correct ? 'Correct!' : `Wrong — Answer: ${quizResult.results[qi].correct_answer}`}
                 </div>
               )}
             </div>
@@ -128,7 +128,7 @@ export default function ClassroomStudentView() {
 
           {!quizResult ? (
             <button className="btn btn-primary btn-block" onClick={submitQuiz} disabled={submitting}>
-              {submitting ? '⏳ Submitting...' : '✅ Submit Answers'}
+              {submitting ? 'Submitting...' : 'Submit Answers'}
             </button>
           ) : (
             <div style={{
@@ -136,9 +136,9 @@ export default function ClassroomStudentView() {
               borderLeft: `3px solid ${quizResult.percentage >= 60 ? '#34D399' : '#F87171'}`,
               background: quizResult.percentage >= 60 ? 'rgba(52,211,153,0.06)' : 'rgba(248,113,113,0.06)',
             }}>
-              <h3 style={{ color: quizResult.percentage >= 60 ? '#34D399' : '#F87171', margin: 0 }}>🏆 Score: {quizResult.score}/{quizResult.max_score} ({quizResult.percentage}%)</h3>
+              <h3 style={{ color: quizResult.percentage >= 60 ? '#34D399' : '#F87171', margin: 0 }}>Score: {quizResult.score}/{quizResult.max_score} ({quizResult.percentage}%)</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: '0.3rem 0 0' }}>
-                {quizResult.percentage >= 80 ? '🌟 Excellent work!' : quizResult.percentage >= 60 ? '👍 Good job!' : '📚 Review the weak areas.'}
+                {quizResult.percentage >= 80 ? 'Excellent work!' : quizResult.percentage >= 60 ? 'Good job!' : 'Review the weak areas.'}
               </p>
             </div>
           )}
@@ -149,7 +149,7 @@ export default function ClassroomStudentView() {
       {!activeQuiz && pendingQuizzes.length > 0 && (
         <div style={{ marginBottom: '1.5rem' }}>
           <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>
-            📋 Pending Quizzes ({pendingQuizzes.length})
+            Pending Quizzes ({pendingQuizzes.length})
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '0.8rem' }}>
             {pendingQuizzes.map(q => (
@@ -158,9 +158,9 @@ export default function ClassroomStudentView() {
                 background: 'var(--glass)', border: '1px solid var(--glass-border)',
                 borderTop: '2px solid #6366F1',
               }}>
-                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text)' }}>📝 {q.topic}</div>
+                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text)' }}>{q.topic}</div>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.5rem' }}>{q.questions_count} questions</div>
-                <button className="btn btn-primary btn-sm btn-block" onClick={() => startQuiz(q)}>▶️ Start Quiz</button>
+                <button className="btn btn-primary btn-sm btn-block" onClick={() => startQuiz(q)}>Start Quiz</button>
               </div>
             ))}
           </div>
@@ -169,14 +169,14 @@ export default function ClassroomStudentView() {
 
       {!activeQuiz && pendingQuizzes.length === 0 && (
         <div style={{ padding: '1rem', borderRadius: 'var(--radius-md)', background: 'rgba(34,211,153,0.06)', border: '1px solid rgba(34,211,153,0.12)', color: '#34D399', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
-          ✅ No pending quizzes — you're all caught up!
+          No pending quizzes — you're all caught up!
         </div>
       )}
 
       {/* Topic Scores */}
       {!activeQuiz && dashboard && Object.keys(dashboard.topic_scores).length > 0 && (
         <div style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>📊 My Topic Scores</h3>
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>My Topic Scores</h3>
           {Object.entries(dashboard.topic_scores).sort((a, b) => a[1] - b[1]).map(([topic, score]) => {
             const color = score >= 70 ? '#34D399' : score >= 50 ? '#FB923C' : '#F87171';
             return (
@@ -195,9 +195,9 @@ export default function ClassroomStudentView() {
       {/* Learning Path */}
       {!activeQuiz && (
         <div>
-          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>🎯 Learning Path</h3>
+          <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>Learning Path</h3>
           <button className="btn btn-primary" onClick={genPath} disabled={loadingPath}>
-            {loadingPath ? '⏳ Generating...' : '🧠 Generate Learning Path'}
+            {loadingPath ? 'Generating...' : 'Generate Learning Path'}
           </button>
           {learningPath && (
             <div style={{ marginTop: '1rem', padding: '1.2rem', borderRadius: 'var(--radius-md)', background: 'var(--glass)', border: '1px solid var(--glass-border)' }}>

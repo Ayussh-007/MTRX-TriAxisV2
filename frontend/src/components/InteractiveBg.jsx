@@ -18,6 +18,9 @@ export default function InteractiveBg() {
     const isDark = () =>
       document.documentElement.getAttribute('data-theme') !== 'light';
 
+    const getRole = () =>
+      document.documentElement.getAttribute('data-role') || 'default';
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -38,10 +41,30 @@ export default function InteractiveBg() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const dark = isDark();
+      const role = getRole();
 
-      const dotColor    = dark ? 'rgba(34,211,153,'  : 'rgba(5,150,105,';
-      const lineColor   = dark ? 'rgba(96,165,250,'  : 'rgba(99,102,241,';
-      const mouseColor  = dark ? 'rgba(167,139,250,' : 'rgba(139,92,246,';
+      // Role-aware palettes
+      const palettes = {
+        teacher: {
+          dot:   dark ? 'rgba(99,102,241,'  : 'rgba(79,70,229,',
+          line:  dark ? 'rgba(129,140,248,' : 'rgba(99,102,241,',
+          mouse: dark ? 'rgba(167,139,250,' : 'rgba(139,92,246,',
+        },
+        student: {
+          dot:   dark ? 'rgba(34,211,153,'  : 'rgba(5,150,105,',
+          line:  dark ? 'rgba(16,185,129,'  : 'rgba(5,150,105,',
+          mouse: dark ? 'rgba(52,211,153,'  : 'rgba(16,185,129,',
+        },
+        default: {
+          dot:   dark ? 'rgba(34,211,153,'  : 'rgba(5,150,105,',
+          line:  dark ? 'rgba(96,165,250,'  : 'rgba(99,102,241,',
+          mouse: dark ? 'rgba(167,139,250,' : 'rgba(139,92,246,',
+        },
+      };
+      const pal = palettes[role] || palettes.default;
+      const dotColor   = pal.dot;
+      const lineColor  = pal.line;
+      const mouseColor = pal.mouse;
       const CONNECT_DIST = 130;
       const MOUSE_DIST   = 160;
 

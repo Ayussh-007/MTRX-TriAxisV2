@@ -57,8 +57,9 @@ export default function StudentPortal() {
         border: '1px solid rgba(52,211,153,0.12)',
         marginBottom: '1.5rem',
       }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>
-          🎒 Welcome, {user.name?.split(' ')[0]}!
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Welcome, {user.name?.split(' ')[0]}!
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: '0.3rem 0 0' }}>
           Open a classroom to view quizzes, scores, and your learning path.
@@ -72,7 +73,7 @@ export default function StudentPortal() {
         marginBottom: '1.5rem',
       }}>
         <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem' }}>
-          🔗 Join a Classroom
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{display:'inline',verticalAlign:'middle'}}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Join a Classroom
         </div>
         <form onSubmit={handleJoin} style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
           <input
@@ -84,14 +85,15 @@ export default function StudentPortal() {
             maxLength={6}
           />
           <button type="submit" className="btn btn-primary" disabled={joining} style={{ height: '42px' }}>
-            {joining ? '⏳ Joining...' : '🔗 Join'}
+            {joining ? 'Joining...' : 'Join'}
           </button>
         </form>
       </div>
 
       {/* Classroom Grid */}
-      <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.8rem' }}>
-        🏫 My Classrooms
+      <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        My Classrooms
       </h2>
 
       {loading ? (
@@ -101,7 +103,9 @@ export default function StudentPortal() {
           textAlign: 'center', padding: '3rem', borderRadius: 'var(--radius-lg)',
           background: 'var(--glass)', border: '1px solid var(--glass-border)',
         }}>
-          <div style={{ fontSize: '3rem', marginBottom: '0.8rem' }}>📚</div>
+          <div style={{ fontSize: '3rem', marginBottom: '0.8rem', display: 'flex', justifyContent: 'center', color: 'var(--text-muted)' }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
           <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
             You haven't joined any classrooms yet. Ask your teacher for a join code!
           </div>

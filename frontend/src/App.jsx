@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from './context/AuthContext';
@@ -31,6 +32,16 @@ function AppLayout() {
   const { user } = useAuth();
   const standaloneRoutes = ['/', '/auth'];
 
+  /* Set data-role on <html> so CSS role-theming works globally */
+  useEffect(() => {
+    if (user?.role) {
+      document.documentElement.setAttribute('data-role', user.role);
+    } else {
+      document.documentElement.removeAttribute('data-role');
+    }
+    return () => document.documentElement.removeAttribute('data-role');
+  }, [user?.role]);
+
   if (standaloneRoutes.includes(location.pathname)) {
     return (
       <Routes>
@@ -45,28 +56,30 @@ function AppLayout() {
       <InteractiveBg />
       <Sidebar />
       <main className="main-content">
-        <Routes>
-          {/* ── Teacher: Classroom list ── */}
-          <Route path="/home" element={<RequireAuth roles={['teacher']}><Home /></RequireAuth>} />
-          <Route path="/classrooms" element={<RequireAuth roles={['teacher']}><ClassroomManager /></RequireAuth>} />
+        <div className="main-content-inner">
+          <Routes>
+            {/* ── Teacher: Classroom list ── */}
+            <Route path="/home" element={<RequireAuth roles={['teacher']}><Home /></RequireAuth>} />
+            <Route path="/classrooms" element={<RequireAuth roles={['teacher']}><ClassroomManager /></RequireAuth>} />
 
-          {/* ── Classroom-scoped (teacher) ── */}
-          <Route path="/classroom/:classroomId" element={<RequireAuth roles={['teacher']}><ClassroomDashboard /></RequireAuth>} />
-          <Route path="/classroom/:classroomId/curriculum" element={<RequireAuth roles={['teacher']}><CurriculumUpload /></RequireAuth>} />
-          <Route path="/classroom/:classroomId/quiz" element={<RequireAuth roles={['teacher']}><QuizGenerator /></RequireAuth>} />
-          <Route path="/classroom/:classroomId/attendance" element={<RequireAuth roles={['teacher']}><Attendance /></RequireAuth>} />
-          <Route path="/classroom/:classroomId/slides" element={<RequireAuth roles={['teacher']}><SlideMaker /></RequireAuth>} />
-          <Route path="/classroom/:classroomId/agent" element={<RequireAuth roles={['teacher']}><AIAgent /></RequireAuth>} />
-          <Route path="/classroom/:classroomId/analytics" element={<RequireAuth roles={['teacher']}><TeacherDashboard /></RequireAuth>} />
-          <Route path="/classroom/:classroomId/students" element={<RequireAuth roles={['teacher']}><StudentManager /></RequireAuth>} />
+            {/* ── Classroom-scoped (teacher) ── */}
+            <Route path="/classroom/:classroomId" element={<RequireAuth roles={['teacher']}><ClassroomDashboard /></RequireAuth>} />
+            <Route path="/classroom/:classroomId/curriculum" element={<RequireAuth roles={['teacher']}><CurriculumUpload /></RequireAuth>} />
+            <Route path="/classroom/:classroomId/quiz" element={<RequireAuth roles={['teacher']}><QuizGenerator /></RequireAuth>} />
+            <Route path="/classroom/:classroomId/attendance" element={<RequireAuth roles={['teacher']}><Attendance /></RequireAuth>} />
+            <Route path="/classroom/:classroomId/slides" element={<RequireAuth roles={['teacher']}><SlideMaker /></RequireAuth>} />
+            <Route path="/classroom/:classroomId/agent" element={<RequireAuth roles={['teacher']}><AIAgent /></RequireAuth>} />
+            <Route path="/classroom/:classroomId/analytics" element={<RequireAuth roles={['teacher']}><TeacherDashboard /></RequireAuth>} />
+            <Route path="/classroom/:classroomId/students" element={<RequireAuth roles={['teacher']}><StudentManager /></RequireAuth>} />
 
-          {/* ── Student ── */}
-          <Route path="/portal" element={<RequireAuth roles={['student']}><StudentPortal /></RequireAuth>} />
-          <Route path="/classroom/:classroomId/student" element={<RequireAuth roles={['student']}><ClassroomStudentView /></RequireAuth>} />
+            {/* ── Student ── */}
+            <Route path="/portal" element={<RequireAuth roles={['student']}><StudentPortal /></RequireAuth>} />
+            <Route path="/classroom/:classroomId/student" element={<RequireAuth roles={['student']}><ClassroomStudentView /></RequireAuth>} />
 
-          {/* ── Fallback ── */}
-          <Route path="*" element={<Navigate to={user?.role === 'teacher' ? '/home' : user ? '/portal' : '/auth'} replace />} />
-        </Routes>
+            {/* ── Fallback ── */}
+            <Route path="*" element={<Navigate to={user?.role === 'teacher' ? '/home' : user ? '/portal' : '/auth'} replace />} />
+          </Routes>
+        </div>
       </main>
     </div>
   );
