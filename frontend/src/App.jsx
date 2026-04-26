@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-route
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
+import InteractiveBg from './components/InteractiveBg';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import Home from './pages/Home';
@@ -41,6 +42,7 @@ function AppLayout() {
 
   return (
     <div className="app-layout">
+      <InteractiveBg />
       <Sidebar />
       <main className="main-content">
         <Routes>

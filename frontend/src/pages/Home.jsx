@@ -39,7 +39,12 @@ export default function Home() {
         marginBottom: '1.5rem',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.5rem' }}>
-          <span style={{ fontSize: '2rem' }}>🎓</span>
+          <span style={{ display: 'flex', alignItems: 'center', color: 'var(--primary-light)' }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </span>
           <div>
             <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text)', margin: 0 }}>
               Welcome, {user?.name?.split(' ')[0]}!
@@ -68,8 +73,11 @@ export default function Home() {
 
       {/* Classrooms Grid */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
-          🏫 My Classrooms
+        <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          My Classrooms
         </h2>
         <button className="btn btn-primary btn-sm" onClick={() => navigate('/classrooms')}>
           + Create Classroom
@@ -83,7 +91,11 @@ export default function Home() {
           textAlign: 'center', padding: '3rem', borderRadius: 'var(--radius-lg)',
           background: 'var(--glass)', border: '1px solid var(--glass-border)',
         }}>
-          <div style={{ fontSize: '3rem', marginBottom: '0.8rem' }}>🏫</div>
+          <div style={{ fontSize: '3rem', marginBottom: '0.8rem', display: 'flex', justifyContent: 'center', color: 'var(--text-muted)' }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
           <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>
             You haven't created any classrooms yet.
           </div>

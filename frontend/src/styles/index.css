@@ -275,9 +275,10 @@ a:hover { color: var(--primary); text-decoration: none; }
 }
 
 .sidebar-link-icon {
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 22px;
-  text-align: center;
   flex-shrink: 0;
 }
 
@@ -817,6 +818,9 @@ input[type="checkbox"], input[type="radio"] {
   border-left: none;
   border-right: none;
   font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .tab:hover { color: var(--text-secondary); }

@@ -5,6 +5,31 @@ import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
+const SI = ({ children, size = 15 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"
+    style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}>
+    {children}
+  </svg>
+);
+
+const Ic = {
+  teacher:    <SI size={20}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></SI>,
+  overview:   <SI><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></SI>,
+  trendUp:    <SI><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></SI>,
+  fire:       <SI><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></SI>,
+  brain:      <SI><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.14z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.14z"/></SI>,
+  users:      <SI><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></SI>,
+  bar:        <SI><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></SI>,
+  calendar:   <SI><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></SI>,
+  warn:       <SI><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></SI>,
+  quiz:       <SI><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></SI>,
+  sun:        <SI><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></SI>,
+  clipboard:  <SI><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></SI>,
+  light:      <SI><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><circle cx="12" cy="12" r="4"/></SI>,
+  hourglass:  <SI><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></SI>,
+};
+
 export default function TeacherDashboard() {
   const { classroomId } = useParams();
   const [perf, setPerf] = useState(null);
@@ -42,7 +67,11 @@ export default function TeacherDashboard() {
 
   const riskColor = (level) => ({ critical: '#F87171', high: '#FB923C', medium: '#FBBF24', low: '#34D399' }[level] || '#64748B');
   const trendColor = (t) => t === 'improving' ? '#34D399' : t === 'declining' ? '#F87171' : '#FBBF24';
-  const trendIcon = (t) => t === 'improving' ? '📈' : t === 'declining' ? '📉' : '➡️';
+  const trendIcon = (t) => t === 'improving'
+    ? <SI size={13}><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></SI>
+    : t === 'declining'
+    ? <SI size={13}><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></SI>
+    : <SI size={13}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></SI>;
   const scoreBarColor = (val) => val >= 70 ? '#34D399' : val >= 50 ? '#FB923C' : '#F87171';
 
   const chartTooltipStyle = { borderRadius: 10 };
@@ -50,19 +79,19 @@ export default function TeacherDashboard() {
   return (
     <div>
       <div className="page-header">
-        <h2>👩‍🏫 Teacher Dashboard</h2>
+        <h2>{Ic.teacher} Teacher Dashboard</h2>
         <p>Class analytics, quiz trends, and AI-powered teaching suggestions.</p>
       </div>
 
       <div className="tabs">
         {[
-          { id: 'overview', label: '📊 Overview' },
-          { id: 'trends', label: '📈 Quiz Trends' },
-          { id: 'risk', label: '🔥 Risk & Weak Topics' },
-          { id: 'ai', label: '🧠 AI Suggestions' },
+          { id: 'overview', icon: Ic.overview,  label: 'Overview' },
+          { id: 'trends',   icon: Ic.trendUp,   label: 'Quiz Trends' },
+          { id: 'risk',     icon: Ic.fire,       label: 'Risk & Weak Topics' },
+          { id: 'ai',       icon: Ic.brain,      label: 'AI Suggestions' },
         ].map(tab => (
           <button key={tab.id} className={`tab${activeTab === tab.id ? ' active' : ''}`} onClick={() => setActiveTab(tab.id)}>
-            {tab.label}
+            {tab.icon} {tab.label}
           </button>
         ))}
       </div>
@@ -72,21 +101,21 @@ export default function TeacherDashboard() {
         <>
           {weather && (
             <div className={`alert ${weather.is_bad ? 'alert-danger' : 'alert-info'}`}>
-              {weather.is_bad ? '⚠️ Bad Weather: ' : '☀️ '}{weather.summary}
+              {weather.is_bad ? <>{Ic.warn} Bad Weather: </> : <>{Ic.sun} </>}{weather.summary}
             </div>
           )}
           {perf && (
             <div className="metric-row">
-              <div className="metric-card"><div className="label">👥 Students</div><div className="value">{perf.num_students}</div></div>
-              <div className="metric-card"><div className="label">📈 Class Avg</div><div className="value">{perf.class_avg}%</div></div>
-              <div className="metric-card"><div className="label">📅 Attendance</div><div className="value">{perf.avg_attendance}%</div></div>
-              <div className="metric-card"><div className="label">⚠️ Weak Topics</div><div className="value">{weakTopics.length}</div></div>
-              <div className="metric-card"><div className="label">📝 Quizzes</div><div className="value">{trends?.quizzes_over_time?.length || 0}</div></div>
+              <div className="metric-card"><div className="label">{Ic.users} Students</div><div className="value">{perf.num_students}</div></div>
+              <div className="metric-card"><div className="label">{Ic.bar} Class Avg</div><div className="value">{perf.class_avg}%</div></div>
+              <div className="metric-card"><div className="label">{Ic.calendar} Attendance</div><div className="value">{perf.avg_attendance}%</div></div>
+              <div className="metric-card"><div className="label">{Ic.warn} Weak Topics</div><div className="value">{weakTopics.length}</div></div>
+              <div className="metric-card"><div className="label">{Ic.quiz} Quizzes</div><div className="value">{trends?.quizzes_over_time?.length || 0}</div></div>
             </div>
           )}
           {perf && perf.per_student.length > 0 && (
             <div className="section">
-              <h3 className="section-title">👥 Student Performance</h3>
+              <h3 className="section-title">{Ic.users} Student Performance</h3>
               <div className="table-container">
                 <table className="data-table">
                   <thead><tr><th>ID</th><th>Name</th><th>Score</th><th>Attendance</th><th>Trend</th></tr></thead>
@@ -117,7 +146,7 @@ export default function TeacherDashboard() {
           {trends.quizzes_over_time.length > 0 ? (
             <>
               <div className="section">
-                <h3 className="section-title">📈 Quiz Scores Over Time</h3>
+                <h3 className="section-title">{Ic.trendUp} Quiz Scores Over Time</h3>
                 <div className="card" style={{ padding: '1.2rem' }}>
                   <ResponsiveContainer width="100%" height={280}>
                     <LineChart data={trends.quizzes_over_time}>
@@ -131,7 +160,7 @@ export default function TeacherDashboard() {
                 </div>
               </div>
               <div className="section">
-                <h3 className="section-title">📋 Quiz History</h3>
+                <h3 className="section-title">{Ic.clipboard} Quiz History</h3>
                 <div className="table-container">
                   <table className="data-table">
                     <thead><tr><th>Topic</th><th>Class Avg</th><th>Students</th><th>Date</th></tr></thead>
@@ -155,7 +184,7 @@ export default function TeacherDashboard() {
 
           {Object.keys(trends.topic_averages).length > 0 && (
             <div className="section">
-              <h3 className="section-title">📊 Topic Performance</h3>
+              <h3 className="section-title">{Ic.bar} Topic Performance</h3>
               <div className="card" style={{ padding: '1.2rem' }}>
                 <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={Object.entries(trends.topic_averages).map(([t, d]) => ({ topic: t, average: d.average }))}>
@@ -176,7 +205,7 @@ export default function TeacherDashboard() {
 
           {trends.student_trends.length > 0 && (
             <div className="section">
-              <h3 className="section-title">👥 Per-Student Trends</h3>
+              <h3 className="section-title">{Ic.users} Per-Student Trends</h3>
               <div className="card-grid">
                 {trends.student_trends.map(s => (
                   <div key={s.id} className="card" style={{ borderTop: `2px solid ${trendColor(s.trend)}` }}>
@@ -208,7 +237,7 @@ export default function TeacherDashboard() {
         <>
           {risk.length > 0 && (
             <div className="section">
-              <h3 className="section-title">🔥 Student Risk Levels</h3>
+              <h3 className="section-title">{Ic.fire} Student Risk Levels</h3>
               <div className="card-grid">
                 {risk.map(r => (
                   <div key={r.id} className="card" style={{ borderLeft: `3px solid ${riskColor(r.risk_level)}` }}>
@@ -224,7 +253,7 @@ export default function TeacherDashboard() {
           )}
           {weakTopics.length > 0 && (
             <div className="section">
-              <h3 className="section-title">📝 Class Weak Topics</h3>
+              <h3 className="section-title">{Ic.quiz} Class Weak Topics</h3>
               {weakTopics.map((w, i) => {
                 const c = w.class_avg < 30 ? '#F87171' : w.class_avg < 50 ? '#FB923C' : '#FBBF24';
                 return (
@@ -235,7 +264,7 @@ export default function TeacherDashboard() {
                 );
               })}
               <button className="btn btn-primary" onClick={genDoubtSheet} disabled={loadingDoubt} style={{ marginTop: '0.5rem' }}>
-                {loadingDoubt ? '⏳ Generating...' : '📋 Generate Doubt Sheet'}
+                {loadingDoubt ? <>{Ic.hourglass} Generating...</> : <>{Ic.clipboard} Generate Doubt Sheet</>}
               </button>
               {doubtSheet && <div className="card markdown-content" style={{ marginTop: '1rem' }}><ReactMarkdown>{doubtSheet}</ReactMarkdown></div>}
             </div>
@@ -246,12 +275,12 @@ export default function TeacherDashboard() {
       {/* ──── AI ──── */}
       {activeTab === 'ai' && (
         <div className="section">
-          <h3 className="section-title">🧠 AI Teaching Suggestions</h3>
+          <h3 className="section-title">{Ic.brain} AI Teaching Suggestions</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
             AI analyses class performance, weather, and preferences to generate tailored advice.
           </p>
           <button className="btn btn-primary" onClick={genSuggestions} disabled={loadingSugg}>
-            {loadingSugg ? '⏳ Analyzing (30-60s)...' : '💡 Generate Suggestions'}
+            {loadingSugg ? <>{Ic.hourglass} Analyzing (30-60s)...</> : <>{Ic.light} Generate Suggestions</>}
           </button>
           {suggestions && <div className="card markdown-content" style={{ marginTop: '1rem' }}><ReactMarkdown>{suggestions}</ReactMarkdown></div>}
         </div>

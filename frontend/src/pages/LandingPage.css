@@ -58,10 +58,21 @@
   animation-delay: -10s;
 }
 
-[data-theme="light"] .land-orb { opacity: 0.3; }
-[data-theme="light"] .land-orb-1 { background: radial-gradient(circle, rgba(34, 211, 153, 0.2), transparent 70%); }
-[data-theme="light"] .land-orb-2 { background: radial-gradient(circle, rgba(167, 139, 250, 0.15), transparent 70%); }
-[data-theme="light"] .land-orb-3 { background: radial-gradient(circle, rgba(96, 165, 250, 0.12), transparent 70%); }
+[data-theme="light"] .land-orb {
+  opacity: 0.3;
+}
+
+[data-theme="light"] .land-orb-1 {
+  background: radial-gradient(circle, rgba(34, 211, 153, 0.2), transparent 70%);
+}
+
+[data-theme="light"] .land-orb-2 {
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.15), transparent 70%);
+}
+
+[data-theme="light"] .land-orb-3 {
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.12), transparent 70%);
+}
 
 .land-grid {
   position: absolute;
@@ -80,10 +91,23 @@
 }
 
 @keyframes orbFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25%      { transform: translate(40px, -30px) scale(1.05); }
-  50%      { transform: translate(-20px, 40px) scale(0.95); }
-  75%      { transform: translate(30px, 20px) scale(1.02); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(40px, -30px) scale(1.05);
+  }
+
+  50% {
+    transform: translate(-20px, 40px) scale(0.95);
+  }
+
+  75% {
+    transform: translate(30px, 20px) scale(1.02);
+  }
 }
 
 /* ── Scroll Animations ───────────────────────────────────── */
@@ -232,8 +256,17 @@
 }
 
 @keyframes dotPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.5; transform: scale(0.7); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(0.7);
+  }
 }
 
 .land-title {
@@ -263,8 +296,15 @@
 }
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .land-subtitle {
@@ -343,8 +383,15 @@
 }
 
 @keyframes cardFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-12px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 .land-card-header {
@@ -357,7 +404,10 @@
   color: var(--text);
 }
 
-.land-card-dots { color: var(--text-muted); letter-spacing: 2px; }
+.land-card-dots {
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
 
 .land-card-stat-big {
   display: flex;
@@ -400,7 +450,9 @@
 }
 
 @keyframes barGrow {
-  from { height: 0 !important; }
+  from {
+    height: 0 !important;
+  }
 }
 
 .land-card-row {
@@ -411,7 +463,7 @@
   margin-bottom: 0.6rem;
 }
 
-.land-card-row > div {
+.land-card-row>div {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
@@ -439,8 +491,11 @@
   font-size: 0.78rem;
 }
 
-.land-card-notif span:first-child {
-  font-size: 1.2rem;
+.land-card-notif-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: #FBBF24;
 }
 
 .land-card-notif strong {
@@ -602,8 +657,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
   margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.land-feature-card:hover .land-feature-icon {
+  transform: scale(1.1);
 }
 
 .land-feature-tag {
@@ -686,6 +745,15 @@
   background: var(--glass);
   border: 1px solid var(--glass-border);
   color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.land-arch-badge-icon {
+  display: flex;
+  align-items: center;
+  opacity: 0.75;
 }
 
 .land-arch-layers {
